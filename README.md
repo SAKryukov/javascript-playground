@@ -8,6 +8,6 @@ Besides, `playgroundAPI` can be used to demonstrate pre-created code and JavaScr
 
 ## Compatibility
 
-JavaScript Playground can be used directly by nearly any modern Web browser.
+JavaScript Playground can be used directly with nearly any modern Web browser.
 
 However, `playgroundAPI` cannot be used with some browsers. Recommended are the browsers based on Blink+V8 engines. It includes: Chromium, Chrome, Opera, Vivaldi, latest Microsoft Edge (Chromium-based), and more...
