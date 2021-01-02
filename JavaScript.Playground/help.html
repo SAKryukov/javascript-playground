@@ -1,0 +1,131 @@
+<!doctype html>
+<html>
+<!--
+
+JavaScript Playground v.4.0
+
+Copyright (c) 2015, 2019-2021 by Sergey A Kryukov
+http://www.SAKryukov.org
+http://SAKryukov.org/freeware/calculator
+http://www.codeproject.com/Members/SAKryukov
+
+Published on CodeProject:
+http://www.codeproject.com/Articles/890109/JavaScript-Calculator    
+
+-->
+    <head>
+        <meta charset="utf-8"/>
+        <title>JavaScript Playground v.4.0 Help</title>
+        <style>
+            body, html { background-color: bisque; }
+            body, html, button, input, textarea { font-family: sans-serif; }
+            pre, code { font-family: "Consolas", "Ubuntu Mono", monospace }
+            h1 { text-align: center; }
+            h1 { font-size: 160%; }
+            h2 { font-size: 140%; margin-top: 2em; margin-bottom: 0.8em; }
+            dt { font-weight: bold; }
+            pre, code { background-color: LemonChiffon; }
+            code { padding-left: 0.5em; padding-right:0.5em; }
+        </style>
+    </head>
+<body>
+
+<h1><a href="index.html">JavaScript Playground</a></h1><center>v.&thinsp;4.0</center>
+
+<h2>Simplest Calculations:</h2>
+
+<pre>42</pre>
+Press Ctrl+Enter; output: <code>42</code>
+<pre>2 * 2</pre>
+output: <code>4</code>
+<pre>x = 256 // in <a href="#strict">strict mode</a>, should be: const x = 256
+x/2</pre>
+output: <code>128</code>
+<pre>pow(3, 4) + 1 // no need to prepend with Math.
+// in <a href="#strict">strict mode</a>, should be:
+Math.pow(3, 4) + 1
+</pre>
+output: <code>82</code>
+
+<h2>Additional Functions:</h2>
+
+<dt>bin(numeric)</dt>
+    <dd><i>returns a string with binary representation of number</i></dd>
+<p/>
+<dt>hex(numeric, upperCase)</dt>
+    <dd><i>returns a string with a hexadecimal representation of number</i></dd>
+<p/>
+<dt>f2c(numeric)<dt>
+    <dd><i>converts Fahrenheit degrees to Celsius degrees</i></dd>
+<p/>
+<dt>c2f(numeric)</dt>
+    <dd><i>converts Celsius degrees to Fahrenheit degrees</i></dd>
+<p/>
+
+<h2>Math Functions:</h2>
+
+<p><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Math">Math.*</a> functions don't need to be prefixed with <code>Math.</code> Example:</p>
+    <dd><code>const &pi; = acos(-1)</code></dd>
+<p>With <a href="#strict">strict mode</a>, <code>Math.</code> should be used:</p>
+    <dd><code>const &pi; = Math.acos(-1)</code></dd>
+
+<h2>Console Functions:</h2>
+
+<p>Implemented <a href="https://developer.mozilla.org/en-US/docs/Web/API/console">console</a> methods:<br/>
+<a href="https://developer.mozilla.org/en-US/docs/Web/API/Console/assert">console.assert</a>,
+<a href="https://developer.mozilla.org/en-US/docs/Web/API/Console/clear">console.clear</a>,
+<a href="https://developer.mozilla.org/en-US/docs/Web/API/Console/count">console.count</a>,
+<a href="https://developer.mozilla.org/en-US/docs/Web/API/Console/debug">console.debug</a>,
+<a href="https://developer.mozilla.org/en-US/docs/Web/API/Console/dir">console.dir</a>,
+<a href="https://developer.mozilla.org/en-US/docs/Web/API/Console/error">console.error</a>,
+<a href="https://developer.mozilla.org/en-US/docs/Web/API/Console/info">console.info</a>,
+<a href="https://developer.mozilla.org/en-US/docs/Web/API/Console/log">console.log</a>,
+<a href="https://developer.mozilla.org/en-US/docs/Web/API/Console/time">console.time</a>,
+<a href="https://developer.mozilla.org/en-US/docs/Web/API/Console/timeEnd">console.timeEnd</a>,
+<a href="https://developer.mozilla.org/en-US/docs/Web/API/Console/timeLog">console.timeLog</a>,
+<a href="https://developer.mozilla.org/en-US/docs/Web/API/Console/warn">console.warn</a>.
+</p>
+
+<p>The only difference between
+<a href="https://developer.mozilla.org/en-US/docs/Web/API/Console/debug">console.debug</a>,
+<a href="https://developer.mozilla.org/en-US/docs/Web/API/Console/dir">console.dir</a>,
+<a href="https://developer.mozilla.org/en-US/docs/Web/API/Console/error">console.error</a>,
+<a href="https://developer.mozilla.org/en-US/docs/Web/API/Console/info">console.info</a>,
+<a href="https://developer.mozilla.org/en-US/docs/Web/API/Console/log">console.log</a> and
+<a href="https://developer.mozilla.org/en-US/docs/Web/API/Console/warn">console.warn</a> is the CSS style of a console message.
+For the objects derived from <code>Object</code>, these methods show interactive content in the console, representing hierarchy of the object structure in the form of a tree.
+The nested levels of the hierarchy are shown when a tree node is open, and removed when it is closed.
+This way, circular references in objects are allowed and represented safely.
+The second form of these functions, with first argument representing a format string with substitution represented by the rest of arguments, is not implemented, as it makes little sense.
+Instead, using <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/template_literals">template literals</a>, introduced by <a href="https://en.wikipedia.org/wiki/ECMAScript#6th_Edition_-_ECMAScript_2015">ECMAScript 2015</a>, is recommended.</p>
+
+<p>The method <a href="https://developer.mozilla.org/en-US/docs/Web/API/Console/assert">console.assert(assertion, ...objects)</a> also behaves like <a href="https://developer.mozilla.org/en-US/docs/Web/API/Console/log">console.log</a> and other similar methods, with the following exception:
+the first argument is boolean, reserved for the assert condition. If the first argument <code>assertion</code> evaluates to <code>true</code>, nothing happens, otherwise assertion failed message is dispayed, followed by the rest of arguments <code>...objects</code>.</p> 
+
+<p><u>Note</u>:<br/>In some browsers, the timing methods
+<a href="https://developer.mozilla.org/en-US/docs/Web/API/Console/time">console.time</a>,
+<a href="https://developer.mozilla.org/en-US/docs/Web/API/Console/timeEnd">console.timeEnd</a>,
+<a href="https://developer.mozilla.org/en-US/docs/Web/API/Console/timeLog">console.timeLog</a> may present accuracy problems. The time reading can be rounded or slightly randomized by a particular browser.
+At the moment of writing, correct timing was observed in <a href="https://en.wikipedia.org/wiki/Blink_(browser_engine)">Blink</a>+<a href="https://en.wikipedia.org/wiki/V8_(JavaScript_engine)">V8</a>-based browsers, such as Chromium, Chrome, Opera and Vivaldi.
+Rounding was observed in the browsers using <a href="https://en.wikipedia.org/wiki/SpiderMonkey">SpiderMonkey</a>.
+For further information, please see <a href="https://developer.mozilla.org/en-US/docs/Web/API/Performance/now">this documentation page</a>.</p>
+
+<p>Additional console functions:</p>
+<dt>write(arguments&hellip;)</dt>
+    <dd><i>writes arguments to console, comma-delimited</i></dd>
+<p/>
+<dt>writeLine(arguments&hellip;)</dt>
+    <dd><i>writes arguments to console, comma-delimited, and starts a new line</i></dd>
+<p/>
+
+<p>If one of these functions is called, an additional console view is shown; all output goes to the console, except for the return value which always goes to the text input line at the bottom.
+In case of exceptions in the code written in the input text area, exception information is written to the console.
+Whenever possible, the input text area caret is positioned at the point where the problem is. Note that not all browsers support the information on the exception location in the code string.</p>
+
+<a name="strict"/><h2>Strict Mode</h2>
+
+JavaScript Playground can dynamically switch to JavaScript <i>strict mode</i>, <code>"use strict";</code> and this mode is applied to the user code. Please see the check box in the top right corner. Strict mode imposes a number of limitations useful for writing better maintainable, safer code. In strict mode, prefix <code>Math.</code> should be used.</p>
+<p>See also: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Strict_mode">strict mode</a>.</p>
+
+</body>
+</html>
