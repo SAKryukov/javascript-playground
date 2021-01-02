@@ -4,4 +4,10 @@ JavaScript Playground can be used as an advanced calculator. The result of the s
 
 [Help](https://SAKryukov.github.io/javascript-playground/JavaScript.Playground/help.html)
 
-Besides, playgroundAPI can be used to demonstrate pre-created code and JavaScript techniques, see `javascript-playground/demo.playGroundAPI` and [live demo](https://SAKryukov.github.io/javascript-playground/demo.playGroundAPI/).
+Besides, `playgroundAPI` can be used to demonstrate pre-created code and JavaScript techniques, see `javascript-playground/demo.playGroundAPI` and [live demo](https://SAKryukov.github.io/javascript-playground/demo.playGroundAPI/).
+
+## Compatibility
+
+JavaScript Playground can be used directly by nearly any modern Web browser.
+
+However, `playgroundAPI` cannot be used with some browsers. Recommended are the browsers based on Blink+V8 engines. It includes: Chromium, Chrome, Opera, Vivaldi, latest Microsoft Edge (Chromium-based), and more...
