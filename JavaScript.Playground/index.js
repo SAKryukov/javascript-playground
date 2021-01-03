@@ -3,7 +3,6 @@ const evaluateInMode = (text, writeLine, write, console, isStrict) => { return e
 "use strict";
 
 const definitionSet = {
-    copyright: "2015, 2019-2021 by S A Kryukov",
     keys: {
         evaluate: "F2",
         enter: "Enter", // with Ctrl: evaluate, without: auto-complete
@@ -122,9 +121,10 @@ const setup = (
     strictModeSwitch,
     editor, splitter, consoleSide, console, downloadButton, closeButton,
     evaluateButton, evaluateResult, positionIndicator,
-    copyright) => {
+    product, copyright) => {
 
-    copyright.textContent = definitionSet.copyright;
+    product.innerHTML = `${metadata.title} ${metadata.version}`;
+    copyright.innerHTML = `Copyright &copy; ${metadata.copyright}`;
 
     const consoleInstance = (() => {
         const consoleInstance = {

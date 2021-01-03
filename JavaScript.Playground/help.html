@@ -2,20 +2,20 @@
 <html>
 <!--
 
-JavaScript Playground v.4.0
+JavaScript Playground
 
 Copyright (c) 2015, 2019-2021 by Sergey A Kryukov
 http://www.SAKryukov.org
 http://SAKryukov.org/freeware/calculator
 http://www.codeproject.com/Members/SAKryukov
 
-Published on CodeProject:
+Original publication CodeProject:
 http://www.codeproject.com/Articles/890109/JavaScript-Calculator    
 
 -->
     <head>
         <meta charset="utf-8"/>
-        <title>JavaScript Playground Help</title>
+        <title>JavaScript Playground</title>
         <style>
             body, html { background-color: bisque; }
             body, html, button, input, textarea { font-family: sans-serif; }
@@ -30,7 +30,8 @@ http://www.codeproject.com/Articles/890109/JavaScript-Calculator
     </head>
 <body>
 
-<h1><a href="index.html">JavaScript Playground</a></h1><center>v.&thinsp;4.0</center>
+<h1><a href="index.html"></a></h1>
+<center>v.&thinsp;<span></span></center>
 
 <h2>Simplest Calculations:</h2>
 
@@ -126,6 +127,14 @@ Whenever possible, the input text area caret is positioned at the point where th
 
 JavaScript Playground can dynamically switch to JavaScript <i>strict mode</i>, <code>"use strict";</code> and this mode is applied to the user code. Please see the check box in the top right corner. Strict mode imposes a number of limitations useful for writing better maintainable, safer code. In strict mode, prefix <code>Math.</code> should be used.</p>
 <p>See also: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Strict_mode">strict mode</a>.</p>
+
+<script src="playgroundAPI.js"></script>
+<script>
+    const title = document.querySelector("h1 a");
+    const version = document.querySelector("center");
+    title.textContent = metadata.title;
+    version.textContent += metadata.version;
+</script>
 
 </body>
 </html>

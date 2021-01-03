@@ -29,6 +29,7 @@
     header, footer, textarea { padding-top: var(--vertical-gap); padding-bottom: var(--vertical-gap); }
     header { padding-bottom: 1px; }
     footer { padding-top: 1px; }
+    footer > p > span:last-child { margin-left: var(--horizontal-padding); }
     #splitter {
       background-color: silver; cursor: col-resize;
       display: flex; flex-direction: column; justify-content: center;
@@ -99,7 +100,7 @@
       <input title="Script result" type="text" id="resultCell" spellcheck="false" readonly="readonly"/>
       <input title="Line : Column" type="text" id="statusCell" spellcheck="false" readonly="readonly" tabindex="-1"/>
     </section>
-    <p>Copyright &copy; <span id="copyright"></span></p>
+    <p><span></span><span></span></p>
   </footer>
 
   <script src="playgroundAPI.js"></script>
@@ -112,11 +113,12 @@
     const console = document.getElementById("console");
     const downloadButton = document.querySelector("aside > section > svg:first-child");
     const closeButton = document.querySelector("aside > section > svg:last-child");
-    const copyrightElement = document.querySelector("footer > p > span");
+    const productElement = document.querySelector("footer > p > span:first-child");
+    const copyrightElement = document.querySelector("footer > p > span:last-child");
     const evaluateButton = document.querySelector("button");
     const evaluateResult = document.getElementById("resultCell"); 
     const positionIndicator = document.getElementById("statusCell"); 
-    setup(strictModeSwitch, editor, splitter, consoleSide, console, downloadButton, closeButton, evaluateButton, evaluateResult, positionIndicator, copyrightElement);
+    setup(strictModeSwitch, editor, splitter, consoleSide, console, downloadButton, closeButton, evaluateButton, evaluateResult, positionIndicator, productElement, copyrightElement);
   </script>
 
 </body>
