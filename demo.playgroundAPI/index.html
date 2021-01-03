@@ -19,10 +19,14 @@ http://www.codeproject.com/Articles/890109/JavaScript-Calculator
         <style>
             body, html { background-color: bisque; }
             * { font-family: sans-serif; }
-            pre, code { font-family: "Consolas", "Ubuntu Mono", monospace; font-size: 120%; }
+            pre, code { font-family: "Consolas", "Ubuntu Mono", monospace; font-size: 120%; color: black; }
+            a > code { display: inline-block; text-decoration: none ! important; }
+            a > code::before { content: "'"; color: transparent; }
+            a > code::after { content: "'"; color: transparent; }
             h1 { text-align: center; }
             h1 { font-size: 160%; }
             ul { list-style-type: none; }
+            li { margin-top: 0.6em; }
         </style>
     </head>
 <body>
