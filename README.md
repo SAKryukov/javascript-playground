@@ -4,7 +4,7 @@
 
 [Help](https://SAKryukov.github.io/javascript-playground/JavaScript.Playground/help.html)
 
-Besides, `playgroundAPI` can be used to demonstrate pre-created code and JavaScript techniques, see `javascript-playground/demo.playGroundAPI` and [live demo](https://SAKryukov.github.io/javascript-playground/demo.playGroundAPI/).
+Besides, `playgroundAPI` can be used to demonstrate pre-created code and JavaScript techniques, see `javascript-playground/demo.playgroundAPI` and [live demo](https://SAKryukov.github.io/javascript-playground/demo.playgroundAPI/).
 
 ## Compatibility
 
