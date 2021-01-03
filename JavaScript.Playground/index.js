@@ -1,4 +1,7 @@
-const evaluateInMode = (text, writeLine, write, console, isStrict) => { return eval(safeInput(text, isStrict)); }
+const evaluateInMode = (text, writeLine, write, console, isStrict) => {
+    const f = new Function("writeLine", "write", "console", safeInput(text, isStrict));
+    return f(writeLine, write, console);
+};
 
 "use strict";
 
@@ -802,8 +805,8 @@ const c2f = c => {
 } //c2f
 const safeInput = (text, isStrict) => {
     const safeGlobals = "const document = null, window = null, globalThis = { console: console, write: write, writeLine: writeLine }, navigator = null;";
-    if (isStrict)
-        return `"use strict"; ${safeGlobals}\n${text}`;
-    else
-        return `${safeGlobals} with (Math) \{\n${text}\n\}`;
+    return isStrict ?
+        `"use strict"; ${safeGlobals}\n${text}`
+        :
+        `${safeGlobals} with (Math) \{\n${text}\n\}`;
 } //safeInput
