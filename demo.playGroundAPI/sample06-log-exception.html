@@ -1,5 +1,8 @@
 ﻿<!DOCTYPE html><script src="../JavaScript.Playground/playgroundAPI.js"></script><script>
 
+console.log("Unfold all the object detail below to see the problem:");
+console.log(``);
+
 const sample = {
     level0_A: 1,
     level0_B: 2,
@@ -28,7 +31,6 @@ const sample = {
 Object.defineProperty(sample.level0_C.level1_C.level2_C, "problematic", {
     enumerable: true,
         get: function () {
-            // un-comment next line to see the problem
             alert("Next line silently breaks unfolding of properties in console");
             throw { someProblem: 1 };
             return 1; // inaccessible
