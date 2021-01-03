@@ -15,7 +15,7 @@ http://www.codeproject.com/Articles/890109/JavaScript-Calculator
 -->
     <head>
         <meta charset="utf-8"/>
-        <title>JavaScript Playground API Demo</title>
+        <title>JavaScript Playground</title>
         <style>
             body, html { background-color: bisque; }
             * { font-family: sans-serif; }
@@ -31,7 +31,7 @@ http://www.codeproject.com/Articles/890109/JavaScript-Calculator
     </head>
 <body>
 
-<h1>JavaScript Playground v.&thinsp;4.0 API Demo</h1>
+<h1><span></span> v.&thinsp;<span></span> <span></span></h1>
 <ul>
 <li><a href="sample00.just-calculator.html">Calculate script result</a></li>
 <li><a href="sample01.simplest.html">Simplest constant calculation</a></li>
@@ -45,6 +45,18 @@ http://www.codeproject.com/Articles/890109/JavaScript-Calculator
 <li><a href="sample09.functions.html">Demonstration of functions</a></li>
 <li><a href="sample10.generator-function.html">Demonstration of <code>yield</code> and generator function</a></li>
 </ul>
+
+<script src="../JavaScript.Playground/playgroundAPI.js"></script>
+<script>
+    const subtitle = "API Demo";
+    const productElement = document.querySelector("h1 > span:first-child");
+    const versionElement = document.querySelector("h1 > span:nth-child(2)");
+    const subtitleElement = document.querySelector("h1 > span:last-child");
+    productElement.textContent = metadata.title;
+    versionElement.textContent = metadata.version(2);
+    subtitleElement.textContent = subtitle;
+    document.title = `${document.title} ${subtitle}`;
+</script>
 
 </body>
 </html>
