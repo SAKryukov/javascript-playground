@@ -35,18 +35,20 @@ http://www.codeproject.com/Articles/890109/JavaScript-Calculator
 
 <h2>Simplest Calculations:</h2>
 
-<pre>42</pre>
+<pre>return 42</pre>
 Press Ctrl+Enter; output: <code>42</code>
-<pre>2 * 2</pre>
-output: <code>4</code>
-<pre>x = 256 // in <a href="#strict">strict mode</a>, should be: const x = 256
-x/2</pre>
-output: <code>128</code>
-<pre>pow(3, 4) + 1 // no need to prepend with Math.
-// in <a href="#strict">strict mode</a>, should be:
-Math.pow(3, 4) + 1
+<pre>return 2 * 2</pre>
+Output: <code>4</code>
+<pre>return x = 256</pre>
+In <a href="#strict">strict mode</a>, should be:
+<pre>const x = 256
+return x/2</pre>
+Output: <code>128</code>
+<pre>return pow(3, 4) + 1 // no need to prepend with Math</pre>
+In <a href="#strict">strict mode</a>, should be:
+<pre>return Math.pow(3, 4) + 1</pre>
 </pre>
-output: <code>82</code>
+Output: <code>82</code>
 
 <h2>Additional Functions:</h2>
 
