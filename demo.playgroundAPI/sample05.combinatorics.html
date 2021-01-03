@@ -1,5 +1,8 @@
 ﻿<!DOCTYPE html><script src="../JavaScript.Playground/playgroundAPI.js"></script><script>
 
+const word = "dermatoglyphics";
+const permutationCount = 16;
+
 writeLine();
 
 function randomInt(min, max) { return Math.floor(Math.random() * (max - min + 1)) + min; }
@@ -25,11 +28,10 @@ function ramdomizeWord(word) {
     } //loop
     return result;
 }
-const word = "традескания";
 writeLine(word);
 writeLine(reverseWord(word));
-writeLine("==========");
-for (let c = 0; c<14; ++c) writeLine(ramdomizeWord(word));
+writeLine(String.fromCharCode(0x2500).repeat(word.length));
+for (let c = 0; c < permutationCount; ++c) writeLine(ramdomizeWord(word));
 
 String.prototype.shuffle = function () {
     const a = this.split("");
