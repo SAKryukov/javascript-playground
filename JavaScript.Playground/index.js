@@ -1,9 +1,9 @@
-const evaluateInMode = (text, writeLine, write, console, isStrict) => {
-    const f = new Function("writeLine", "write", "console", safeInput(text, isStrict));
-    return f(writeLine, write, console);
-};
-
 "use strict";
+
+const evaluateInMode = (text, writeLine, write, console, isStrict) => {
+    return new Function("writeLine", "write", "console", safeInput(text, isStrict))
+                        (writeLine,   write,   console);
+};
 
 const definitionSet = {
     keys: {
