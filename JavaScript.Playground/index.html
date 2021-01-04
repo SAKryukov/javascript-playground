@@ -8,7 +8,7 @@
       --input-border: solid thin brown;
       --dimple-border-dark: solid thin black;
       --dimple-border-light: solid thin snow;
-      --horizontal-padding: 1em;
+      --horizontal-padding: 0.8em;
       --horizontal-gap: 0.4em;
       --vertical-gap: 0.2em;
       --button-horizontal-gap: 0.2em;
@@ -65,6 +65,7 @@
     label > input { vertical-align: middle; }
     button, input, textarea { font-size: 100%; }
     details > details, details > p { margin-left: 1.6em; }
+    footer > section > input:last-child { padding: 0; }
   </style>
 </head>
 <body>
@@ -99,7 +100,7 @@
   <footer>
     <section>
       <a title="Help" href="help.html"><u>H</u>elp</a>
-      <button title="Evaluate expression; use &ldquo;write()&rdquo;, &ldquo;writeLine()&rdquo; or &ldquo;console.log()&rdquo; to write to console">Evaluate: F2, Ctrl+Enter&ensp;&emsp;&#x2794;</button>
+      <button title="Evaluate expression; use &ldquo;write()&rdquo;, &ldquo;writeLine()&rdquo; or &ldquo;console.log()&rdquo; to write to console">Evaluate: F2, Ctrl+Enter&thinsp;&#x2794;</button>
       <input title="Script result" type="text" id="resultCell" spellcheck="false" readonly="readonly"/>
       <button>Load&hellip;</button>
       <button>Store&hellip;</button>
