@@ -126,7 +126,7 @@ const setup = (
     evaluateButton, evaluateResult, positionIndicator,
     product, copyright) => {
 
-    product.innerHTML = `${metadata.title} ${metadata.version}`;
+    product.innerHTML = `${metadata.title} ${metadata.version()}`;
     copyright.innerHTML = `Copyright &copy; ${metadata.copyright}`;
 
     const consoleInstance = (() => {

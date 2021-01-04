@@ -1,8 +1,13 @@
 const metadata = (() => {
     return {
         copyright: "2015, 2019-2021 by S A Kryukov",
-        version: "4.0.0",
+        fullVersion: "4.0.0",
         title: document.title,
+        version: function(memberCount) {
+           if (!memberCount) return this.fullVersion;
+           const separator = ".";
+           return this.fullVersion.split(separator).slice(0, memberCount).join(separator);
+        },
     };
 })();
 
