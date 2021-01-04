@@ -120,11 +120,43 @@ const definitionSet = {
     } //if !String.empty
 })();
 
+const fileIO = {
+    storeFile: (fileName, content) => {
+        const link = document.createElement('a');
+        link.href = `data:text/plain;charset=utf-8,${content}`; //sic!
+        link.download = fileName;
+        link.click();
+    }, //storeFile
+    loadTextFile: (fileHandler, acceptFileTypes) => { // fileHandler(fileName, text), acceptFileTypes: comma-separated, in the form: ".js,.json"
+        const input = document.createElement("input");
+        input.type = "file";
+        input.accept = acceptFileTypes;
+        input.value = null;
+        if (fileHandler)
+            input.onchange = event => {
+                const file = event.target.files[0];
+                if (!file) return;
+                const reader = new FileReader();
+                reader.readAsText(file);
+                reader.onload = readEvent => fileHandler(file.name, readEvent.target.result);
+            }; //input.onchange
+        input.click();
+    }, //loadTextFile
+}; //const fileIO
+
 const setup = (
-    strictModeSwitch,
-    editor, splitter, consoleSide, console, downloadButton, closeButton,
-    evaluateButton, evaluateResult, positionIndicator,
+    strictModeSwitch, editor, splitter, consoleSide, console,
+    downloadButton, closeButton, evaluateButton, loadButton, storeButton,
+    evaluateResult, positionIndicator,
     product, copyright) => {
+
+    loadButton.onclick = () => { fileIO.loadTextFile((_, result) => {
+            editor.value = result;
+        }, ".js");
+    }; //loadButton.onclick
+    storeButton.onclick = () => {
+        fileIO.storeFile("script.js", editor.value);
+    }; //storeButton.onclick
 
     product.innerHTML = `${metadata.title} ${metadata.version()}`;
     copyright.innerHTML = `Copyright &copy; ${metadata.copyright}`;

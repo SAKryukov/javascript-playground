@@ -11,6 +11,8 @@
       --horizontal-padding: 1em;
       --horizontal-gap: 0.4em;
       --vertical-gap: 0.2em;
+      --button-horizontal-gap: 0.2em;
+      --button-horizontal-gap-double: 0.4em;
     }
     * { margin: 0; padding: 0; font-family: sans-serif; box-sizing: content-box; }
     html, body, main { height: 100%; max-height: 100%; }
@@ -28,7 +30,7 @@
     body { padding-left: var(--horizontal-padding); padding-right: var(--horizontal-padding); }
     header, footer, textarea { padding-top: var(--vertical-gap); padding-bottom: var(--vertical-gap); }
     header { padding-bottom: 1px; }
-    footer { padding-top: 1px; }
+    footer { padding-top: 3px; }
     footer > p > span:last-child { margin-left: var(--horizontal-padding); }
     #splitter {
       background-color: silver; cursor: col-resize;
@@ -51,9 +53,10 @@
     footer > section > a { align-self: center; }
     #resultCell { flex: 1; min-width: 1px; }
     #statusCell { margin-left: 0.2em; min-width: 1px; width: 1px; text-align: center; }
-    button { padding: var(--horizontal-padding); padding-top: 0.1em; padding-bottom: 0.1em; margin-left: 0.4em; margin-right: 0.2em; }
+    button { padding: var(--horizontal-padding); padding-top: 0.1em; padding-bottom: 0.16em; white-space: nowrap; }
+    footer > section > button { margin-left: var(--button-horizontal-gap); margin-right: 0; }
+    footer > section > button:first-of-type { margin-left: var(--button-horizontal-gap-double); margin-right: var(--button-horizontal-gap); }
     footer > p { font-size: 70%; margin-top: 0.2em; }
-    button { white-space: nowrap; }
     aside { border: var(--input-border); outline: none; }
     textarea, input { border: var(--input-border); outline: none; background-color: aliceblue; }
     textarea:focus, input:focus { background-color: white; background-color: white; }
@@ -98,6 +101,8 @@
       <a title="Help" href="help.html"><u>H</u>elp</a>
       <button title="Evaluate expression; use &ldquo;write()&rdquo;, &ldquo;writeLine()&rdquo; or &ldquo;console.log()&rdquo; to write to console">Evaluate: F2, Ctrl+Enter&ensp;&emsp;&#x2794;</button>
       <input title="Script result" type="text" id="resultCell" spellcheck="false" readonly="readonly"/>
+      <button>Load&hellip;</button>
+      <button>Store&hellip;</button>
       <input title="Line : Column" type="text" id="statusCell" spellcheck="false" readonly="readonly" tabindex="-1"/>
     </section>
     <p><span></span><span></span></p>
@@ -117,8 +122,12 @@
     const copyrightElement = document.querySelector("footer > p > span:last-child");
     const evaluateButton = document.querySelector("button");
     const evaluateResult = document.getElementById("resultCell"); 
-    const positionIndicator = document.getElementById("statusCell"); 
-    setup(strictModeSwitch, editor, splitter, consoleSide, console, downloadButton, closeButton, evaluateButton, evaluateResult, positionIndicator, productElement, copyrightElement);
+    const positionIndicator = document.getElementById("statusCell");
+    const loadButton = document.querySelector("footer > section > button:nth-of-type(2)");
+    const storeButton = document.querySelector("footer > section > button:last-of-type");
+    setup(strictModeSwitch, editor, splitter, consoleSide, console,
+    downloadButton, closeButton, evaluateButton, loadButton, storeButton,
+    evaluateResult, positionIndicator, productElement, copyrightElement);
   </script>
 
 </body>
