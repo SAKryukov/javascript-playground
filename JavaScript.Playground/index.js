@@ -43,6 +43,8 @@ const definitionSet = {
     },
     textFeatures: {
         defaultOutputFileName: "JavaScriptPlayground.output.txt",
+        defaultScriptFileName: "JavaScriptPlayground.script.js",
+        scriptFileNameFilter: ".js",
         newLine: "\n",
         indentPad: "\t",
         blankSpace: " ",
@@ -149,14 +151,6 @@ const setup = (
     downloadButton, closeButton, evaluateButton, loadButton, storeButton,
     evaluateResult, positionIndicator,
     product, copyright) => {
-
-    loadButton.onclick = () => { fileIO.loadTextFile((_, result) => {
-            editor.value = result;
-        }, ".js");
-    }; //loadButton.onclick
-    storeButton.onclick = () => {
-        fileIO.storeFile("script.js", editor.value);
-    }; //storeButton.onclick
 
     product.innerHTML = `${metadata.title} ${metadata.version()}`;
     copyright.innerHTML = `Copyright &copy; ${metadata.copyright}`;
@@ -391,33 +385,18 @@ const setup = (
         return consoleInstance;
     })(); //consoleInstance
 
-    const setupDownloads = () => {
-        let textFile = null;
-        const makeTextFile = text => {
-            const data = new Blob([text], { type: 'text/plain' });
-            if (textFile !== null)
-                window.URL.revokeObjectURL(textFile);
-            textFile = window.URL.createObjectURL(data);
-            return textFile;
-        }; //makeTextFile
-        const link = document.createElement('a');
-        link.style.display = "none";
-        document.body.appendChild(link);    
-        return (text, defaultFileName) => {
-            link.href = makeTextFile(text);
-            link.setAttribute("download", defaultFileName);
-            link.dispatchEvent(new MouseEvent('click'));
-        };
-    }; //setupDownloads
+    loadButton.onclick = () => { fileIO.loadTextFile((_, result) => {
+        editor.value = result;
+        }, definitionSet.textFeatures.scriptFileNameFilter);
+    }; //loadButton.onclick
+    storeButton.onclick = () => {
+        fileIO.storeFile(definitionSet.textFeatures.defaultScriptFileName, editor.value);
+    }; //storeButton.onclick
+    downloadButton.onclick = () => {
+        fileIO.storeFile(definitionSet.textFeatures.defaultOutputFileName, consoleInstance.toString());
+    }; //downloadButton.onclick
 
-    const downloadMethod = (() => {
-        const download = setupDownloads();
-        const downloadMethod = () => { download(consoleInstance.toString(), definitionSet.textFeatures.defaultOutputFileName); }
-        downloadButton.onclick = () => { downloadMethod(); };
-        return downloadMethod;
-           })(); //setupConsoleDownloads
-
-    const consoleApi = {
+const consoleApi = {
         assert: (assertion, ...objectsToDisplay) => {
             if (assertion) return;
             let resultingArguments = (objectsToDisplay.length > 0) ?
@@ -493,7 +472,7 @@ const setup = (
             case definitionSet.keys.download: if (event.ctrlKey) {
                 if (!consoleInstance.showing) return;
                 event.preventDefault();
-                return downloadMethod();
+                return fileIO.storeFile(definitionSet.textFeatures.defaultOutputFileName, consoleInstance.toString());
             } //if download
         } //switch
     } //document.onkeydown
