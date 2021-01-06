@@ -1,3 +1,17 @@
+/*
+
+JavaScript Playground
+
+Copyright (c) 2015, 2019-2021 by Sergey A Kryukov
+http://www.SAKryukov.org
+http://SAKryukov.org/freeware/calculator
+http://www.codeproject.com/Members/SAKryukov
+
+Original publication CodeProject:
+http://www.codeproject.com/Articles/890109/JavaScript-Calculator    
+
+*/
+
 const metadata = (() => {
     return {
         copyright: "2015, 2019-2021 by S A Kryukov",
