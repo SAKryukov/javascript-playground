@@ -1,0 +1,15 @@
+{
+    "git.enabled": false,
+    "cSpell.enabled": true,
+    "cSpell.words": [
+        "Kryukov",
+    ],
+    "markdown.styles": [
+        "styles.css"
+    ],
+    "markdown.extensibleMarkdown.TOC.includeLevels": [
+        1,
+        2,
+        3,
+    ],
+}
