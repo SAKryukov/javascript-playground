@@ -837,5 +837,5 @@ const safeInput = (text, isStrict) => {
     return isStrict ?
         `"use strict"; ${safeGlobals}; ${text}`
         :
-        `${safeGlobals} with (Math) \{${text}\n\}`;
+        `${safeGlobals}; with (Math) \{${text}\n\}`;
 }; //safeInput
