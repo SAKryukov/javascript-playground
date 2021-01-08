@@ -14,7 +14,7 @@ http://www.codeproject.com/Articles/890109/JavaScript-Calculator
 
 "use strict";
 
-const evaluateInMode = (text, writeLine, write, console, isStrict) => {
+const evaluateWith = (text, writeLine, write, console, isStrict) => {
     return new Function("writeLine", "write", "console", safeInput(text, isStrict))
                         (writeLine,   write,   console);
 };
@@ -353,7 +353,7 @@ const setup = (
                 }; //isKnown
                 const knownPosition = isKnown(exceptionInstance.lineNumber) && isKnown(exceptionInstance.columnNumber);
                 if (knownPosition)
-                    this.writeLine([`Line: ${exceptionInstance.lineNumber - 1}, column: ${exceptionInstance.columnNumber}`]); //sic! see extra lines in evaluateInMode
+                    this.writeLine([`Line: ${exceptionInstance.lineNumber - 2}, column: ${exceptionInstance.columnNumber + 1}`]); //sic! see extra lines in evaluateWith
                 if (knownPosition)
                     this.setCaret(exceptionInstance.lineNumber - 2, exceptionInstance.columnNumber);
             }, //showException
@@ -465,7 +465,7 @@ const consoleApi = {
     const evaluate = () => {
         consoleInstance.reset();
         try {
-            evaluateResult.value = evaluateInMode(
+            evaluateResult.value = evaluateWith(
                 editor.value,
                 (...objects) => consoleInstance.writeLine(objects),
                 (...objects) => consoleInstance.write(objects),
@@ -801,6 +801,8 @@ const consoleApi = {
         editor.focus();
     }; //document.body.onload
 
+    editor.focus();
+
 }; //setup
 
 //API:
@@ -831,7 +833,7 @@ const c2f = c => {
 const safeInput = (text, isStrict) => {
     const safeGlobals = "const document = null, window = null, globalThis = { console: console, write: write, writeLine: writeLine }, navigator = null;";
     return isStrict ?
-        `"use strict"; ${safeGlobals}\n${text}`
+        `"use strict"; ${safeGlobals}${text}`
         :
-        `${safeGlobals} with (Math) \{\n${text}\n\}`;
-} //safeInput
+        `${safeGlobals} with (Math) \{${text}\n\}`;
+}; //safeInput
