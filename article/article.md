@@ -42,7 +42,7 @@ Later I added several useful things, such as file I/O and fully-fledged console 
 
 This is the skeleton of the main script explaining core functionality:
 
-```{lang=JavaScript}
+```{lang=JavaScript}{id=code-core}
 const evaluateWith = (text, writeLine, write, console, isStrict) => {
     return new Function(
         "writeLine", "write", "console", safeInput(text, isStrict))
@@ -51,7 +51,7 @@ const evaluateWith = (text, writeLine, write, console, isStrict) => {
 // ...
 
 const console = // ...
-const writeLine = // ...
+сconst writeLine = // ...
 const write = // ...
 
 // ...
@@ -107,11 +107,13 @@ The method [`console.assert(assertion, ...objects)`](https://developer.mozilla.o
 <uNote</u>:<br/>
 In some browsers, the timing methods [console.time](https://developer.mozilla.org/en-US/docs/Web/API/Console/time), [console.timeEnd](https://developer.mozilla.org/en-US/docs/Web/API/Console/timeEnd), [console.timeLog](https://developer.mozilla.org/en-US/docs/Web/API/Console/timeLog) may present accuracy problems. The time reading can be rounded or slightly randomized by a particular browser. At the moment of writing, correct timing was observed in Blink+V8-based browsers, such as Chromium, Chrome, Opera and Vivaldi. Rounding was observed in the browsers using [SpiderMonkey](https://en.wikipedia.org/wiki/SpiderMonkey). For further information, please see [this documentation page](https://developer.mozilla.org/en-US/docs/Web/API/Performance/now).
 
+For the console implementation, see the function object `consoleInstance.showException(exception)` in the source code.
+
 ### File I/O
 
 File I/O is the newest feature. It is not very usual for a Web page, but there is nothing too difficult in it. File I/O is used in three points: 1) a JavaScript text can be loaden into the editor control, 2) the content of the editor control can be saved in a file, 3) the content of the console can be converted to text (possibly with some loss of information) and saved in a text file. This is the implementation:
 
-```{lang=JavaScript}
+```{lang=JavaScript}{id=code-fileIO}
 const fileIO = {
 
     storeFile: (fileName, content) => {
@@ -148,10 +150,16 @@ Note that the modern [File System Access API](https://developer.mozilla.org/en-U
 
 ### Excepton Handling
 
+In the code of [`evaluate`](#code-core), all exceptions are caught and handled by `consoleInstance.showException(exception)`. If an exception is caught, the element corresponding to `consoleInstance` is shown with yellow background and the exception information. At this point, there can be two cases: some browsers will locate the line and the column in the input script, the point where the error is detected, and report it. In some other browsers, this information is considered unsafe and is not available.
 
-## Playground API
+If this information is available, the text caret is also put in the reported position in the `edit` control.
 
-```{lang=JavaScript}
+```{lang=JavaScript}{id=code-show-exception}
 }
 ```
 
+## Playground API
+
+```{lang=JavaScript}{id=code-playgroundAPI-sample}
+}
+```
