@@ -33,6 +33,48 @@ JavaScript Calculator became JavaScript Playground when I started to publish art
 
 Later I added several useful things, such as file I/O and fully-fledged console used to browse objects with complex structure.
 
+## Core
+
+```{lang=JavaScript}
+const evaluateWith = (text, writeLine, write, console, isStrict) => {
+    return new Function(
+        "writeLine", "write", "console", safeInput(text, isStrict))
+        (writeLine,   write,   console);
+
+// ...
+
+const console = // ...
+const writeLine = // ...
+const write = // ...
+
+// ...
+
+const evaluate = () => {
+    consoleInstance.reset();
+    try {
+        evaluateResult.value = evaluateWith(
+            editor.value,
+            (...objects) => consoleInstance.writeLine(objects),
+            (...objects) => consoleInstance.write(objects),
+            consoleApi,
+            strictModeSwitch.checked);
+    } catch (exception) {
+        consoleInstance.showException(exception);
+    } //exception
+    return false;
+};
+
+const safeInput = (text, isStrict) => {
+    const safeGlobals =
+        "const document = null, window = null, navigator = null, " +
+        "globalThis = {console: console, write: write, writeLine: writeLine}";
+    return isStrict ?
+        `"use strict"; ${safeGlobals}\n${text}`
+        :
+        `${safeGlobals} with (Math) \{\n${text}\n\}`;
+};
+```
+
 ## Playground API
 
 ```{lang=JavaScript}{#code-keyboard}
