@@ -64,14 +64,13 @@ function showSample(title, doNotEvaluate, strict) {
       title = (value => {
          return value.replace(/.*\/(.+)\..*/g, "$1");
       })(window.location.toString());
-   JavaScriptPlaygroundAPI.call(path, code, title, doNotEvaluate, strict);
+   JavaScriptPlaygroundAPI.userCall(path, code, title, doNotEvaluate, strict);
 } //showSample
 
 const JavaScriptPlaygroundAPI = {
    APIDataKey: "S. A. Kryukov JavaScript Playground API",
    storage: sessionStorage,
-   // user call:
-   call: function (path, code, title, doNotEvaluate, strict) {
+   userCall: function (path, code, title, doNotEvaluate, strict) {
       this.storage.setItem(this.APIDataKey, JSON.stringify({ code: code, doNotEvaluate: doNotEvaluate, strict: strict, title: title }));
       document.location = path;
    },
