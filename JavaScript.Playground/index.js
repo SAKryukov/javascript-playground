@@ -831,9 +831,11 @@ const c2f = c => {
     return 9 / 5 * c + 32;
 } //c2f
 const safeInput = (text, isStrict) => {
-    const safeGlobals = "const document = null, window = null, globalThis = { console: console, write: write, writeLine: writeLine }, navigator = null;";
+    const safeGlobals =
+        "const document = null, window = null, navigator = null, " +
+        "globalThis = {console: console, write: write, writeLine: writeLine}";
     return isStrict ?
-        `"use strict"; ${safeGlobals}${text}`
+        `"use strict"; ${safeGlobals}; ${text}`
         :
         `${safeGlobals} with (Math) \{${text}\n\}`;
 }; //safeInput
