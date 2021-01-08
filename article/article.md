@@ -17,9 +17,12 @@ A cross-platform replacement for all those office presentation applications in a
 	<li><a href="https://SAKryukov.github.io/web-presentation/demo">Live demo</a></li>
 </ul>
 
-(This demo uses one AV1 video, which is compatible with almost all browsers, but not Microsoft Edge)
-
 ![presentation.h](main.jpg)
+
+<blockquote id="epigraph" class="FQ"><div class="FQA">Epigraph:</div>
+<p><i>It is the child in man that is the source of his uniqueness and creativeness, and the playground is the optimal milieu for the unfolding of his capacities and talents.</i></p>
+<dd><a href="https://en.wikipedia.org/wiki/Eric_Hoffer">Eric Hoffer</a></dd>
+</blockquote>
 
 ## Contents{no-toc}
 
@@ -104,20 +107,51 @@ The method [`console.assert(assertion, ...objects)`](https://developer.mozilla.o
 <uNote</u>:<br/>
 In some browsers, the timing methods [console.time](https://developer.mozilla.org/en-US/docs/Web/API/Console/time), [console.timeEnd](https://developer.mozilla.org/en-US/docs/Web/API/Console/timeEnd), [console.timeLog](https://developer.mozilla.org/en-US/docs/Web/API/Console/timeLog) may present accuracy problems. The time reading can be rounded or slightly randomized by a particular browser. At the moment of writing, correct timing was observed in Blink+V8-based browsers, such as Chromium, Chrome, Opera and Vivaldi. Rounding was observed in the browsers using [SpiderMonkey](https://en.wikipedia.org/wiki/SpiderMonkey). For further information, please see [this documentation page](https://developer.mozilla.org/en-US/docs/Web/API/Performance/now).
 
+### File I/O
+
+File I/O is the newest feature. It is not very usual for a Web page, but there is nothing too difficult in it. File I/O is used in three points: 1) a JavaScript text can be loaden into the editor control, 2) the content of the editor control can be saved in a file, 3) the content of the console can be converted to text (possibly with some loss of information) and saved in a text file. This is the implementation:
+
+```{lang=JavaScript}
+const fileIO = {
+
+    storeFile: (fileName, content) => {
+        const link = document.createElement('a');
+        link.href = `data:text/plain;charset=utf-8,${content}`; //sic!
+        link.download = fileName;
+        link.click();
+    },
+    
+    // loadTextFile arguments:
+    // fileHandler(fileName, text),
+    // acceptFileTypes: comma-separated, in the form: ".js,.json"
+    loadTextFile: (fileHandler, acceptFileTypes) => { 
+        const input = document.createElement("input");
+        input.type = "file";
+        input.accept = acceptFileTypes;
+        input.value = null;
+        if (fileHandler)
+            input.onchange = event => {
+                const file = event.target.files[0];
+                if (!file) return;
+                const reader = new FileReader();
+                reader.readAsText(file);
+                reader.onload = readEvent =>
+                    fileHandler(file.name, readEvent.target.result);
+            }; //input.onchange
+        input.click();
+    },
+
+};
+```
+
+Note that the modern [File System Access API](https://developer.mozilla.org/en-US/docs/Web/API/File_System_Access_API) is not used here, even though it was used in the prototype project. The implementation based on the temporarily created elements and `click` call is simpler and sufficient for the purpose.
+
 ### Excepton Handling
 
 
 ## Playground API
 
-```{lang=JavaScript}{#code-keyboard}
-switch (event.code) {
-    case "Space":
-    case "ArrowDown": move(false); break;
-    case "Backspace":
-    case "ArrowUp": move(true); break;
-    case "ArrowRight": move(presentation.rtl); break;
-    case "ArrowLeft": move(!presentation.rtl); break;
-    //...
+```{lang=JavaScript}
 }
 ```
 
