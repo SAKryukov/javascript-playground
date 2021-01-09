@@ -53,10 +53,10 @@ Output: <code>82</code>
 <h2>Additional Functions:</h2>
 
 <dt>bin(numeric)</dt>
-    <dd><i>returns a string with binary representation of number</i></dd>
+    <dd><i>returns a string with the binary representation of a number</i></dd>
 <p/>
 <dt>hex(numeric, upperCase)</dt>
-    <dd><i>returns a string with a hexadecimal representation of number</i></dd>
+    <dd><i>returns a string with a hexadecimal representation of a number</i></dd>
 <p/>
 <dt>f2c(numeric)<dt>
     <dd><i>converts Fahrenheit degrees to Celsius degrees</i></dd>
@@ -89,27 +89,15 @@ Output: <code>82</code>
 <a href="https://developer.mozilla.org/en-US/docs/Web/API/Console/warn">console.warn</a>.
 </p>
 
-<p>The only difference between
-<a href="https://developer.mozilla.org/en-US/docs/Web/API/Console/debug">console.debug</a>,
-<a href="https://developer.mozilla.org/en-US/docs/Web/API/Console/dir">console.dir</a>,
-<a href="https://developer.mozilla.org/en-US/docs/Web/API/Console/error">console.error</a>,
-<a href="https://developer.mozilla.org/en-US/docs/Web/API/Console/info">console.info</a>,
-<a href="https://developer.mozilla.org/en-US/docs/Web/API/Console/log">console.log</a> and
-<a href="https://developer.mozilla.org/en-US/docs/Web/API/Console/warn">console.warn</a> is the CSS style of a console message.
-For the objects derived from <code>Object</code>, these methods show interactive content in the console, representing hierarchy of the object structure in the form of a tree.
-The nested levels of the hierarchy are shown when a tree node is open, and removed when it is closed.
-This way, circular references in objects are allowed and represented safely.
-The second form of these functions, with first argument representing a format string with substitution represented by the rest of arguments, is not implemented, as it makes little sense.
-Instead, using <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/template_literals">template literals</a>, introduced by <a href="https://en.wikipedia.org/wiki/ECMAScript#6th_Edition_-_ECMAScript_2015">ECMAScript 2015</a>, is recommended.</p>
-
+<p>The only difference between <a href="https://developer.mozilla.org/en-US/docs/Web/API/Console/count">console.debug</a>, <a href="https://developer.mozilla.org/en-US/docs/Web/API/Console/dir">console.dir</a>, <a href="https://developer.mozilla.org/en-US/docs/Web/API/Console/error">console.error</a>, <a href="https://developer.mozilla.org/en-US/docs/Web/API/Console/info">console.info</a>, <a href="https://developer.mozilla.org/en-US/docs/Web/API/Console/log">console.log</a>, and <a href="https://developer.mozilla.org/en-US/docs/Web/API/Console/warn">console.warn</a> is the CSS style of a console message. For the objects derived from <code>Object</code>, these methods show interactive content in the console, representing a hierarchy of the object structure in the form of a tree. The nested levels of the hierarchy are shown when a tree node is open and removed when it is closed. This way, circular references in objects are allowed and represented safely. The second form of these functions, with the first argument representing a format string with substitution represented by the rest of the arguments, is not implemented, as it makes little sense. Instead, using <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/template_literals">template literals</a>, introduced by <a href="https://en.wikipedia.org/wiki/ECMAScript#6th_Edition_-_ECMAScript_2015">ECMAScript 2015</a>, is recommended.</p>
 <p>The method <a href="https://developer.mozilla.org/en-US/docs/Web/API/Console/assert">console.assert(assertion, ...objects)</a> also behaves like <a href="https://developer.mozilla.org/en-US/docs/Web/API/Console/log">console.log</a> and other similar methods, with the following exception:
-the first argument is boolean, reserved for the assert condition. If the first argument <code>assertion</code> evaluates to <code>true</code>, nothing happens, otherwise assertion failed message is dispayed, followed by the rest of arguments <code>...objects</code>.</p> 
+the first argument is boolean, reserved for the assert condition. If the first argument <code>assertion</code> evaluates to <code>true</code>, nothing happens, otherwise, the assertion failed message is displayed, followed by the rest of arguments <code>...objects</code>.</p> 
 
 <p><u>Note</u>:<br/>In some browsers, the timing methods
 <a href="https://developer.mozilla.org/en-US/docs/Web/API/Console/time">console.time</a>,
 <a href="https://developer.mozilla.org/en-US/docs/Web/API/Console/timeEnd">console.timeEnd</a>,
 <a href="https://developer.mozilla.org/en-US/docs/Web/API/Console/timeLog">console.timeLog</a> may present accuracy problems. The time reading can be rounded or slightly randomized by a particular browser.
-At the moment of writing, correct timing was observed in <a href="https://en.wikipedia.org/wiki/Blink_(browser_engine)">Blink</a>+<a href="https://en.wikipedia.org/wiki/V8_(JavaScript_engine)">V8</a>-based browsers, such as Chromium, Chrome, Opera and Vivaldi.
+At the moment of writing, correct timing was observed in <a href="https://en.wikipedia.org/wiki/Blink_(browser_engine)">Blink</a>+<a href="https://en.wikipedia.org/wiki/V8_(JavaScript_engine)">V8</a>-based browsers, such as Chromium, Chrome, Opera, and Vivaldi.
 Rounding was observed in the browsers using <a href="https://en.wikipedia.org/wiki/SpiderMonkey">SpiderMonkey</a>.
 For further information, please see <a href="https://developer.mozilla.org/en-US/docs/Web/API/Performance/now">this documentation page</a>.</p>
 
@@ -127,7 +115,7 @@ Whenever possible, the input text area caret is positioned at the point where th
 
 <a name="strict"/><h2>Strict Mode</h2>
 
-JavaScript Playground can dynamically switch to JavaScript <i>strict mode</i>, <code>"use strict";</code> and this mode is applied to the user code. Please see the check box in the top right corner. Strict mode imposes a number of limitations useful for writing better maintainable, safer code. In strict mode, prefix <code>Math.</code> should be used.</p>
+JavaScript Playground can dynamically switch to JavaScript <i>strict mode</i>, <code>"use strict";</code> and this mode is applied to the user code. Please see the check box in the top right corner. Strict mode imposes a number of limitations useful for writing better maintainable, safer code. In strict mode, the prefix <code>Math.</code> should be used.</p>
 <p>See also: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Strict_mode">strict mode</a>.</p>
 
 <script src="playgroundAPI.js"></script>
