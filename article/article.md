@@ -12,10 +12,7 @@ JavaScript Playground, JavaScript calculator, development, and demo tool
 
 <!-- copy to CodeProject from here ------------------------------------------->
 
-<ul class="download">
-	<li><a href="Web-presentation.zip">Download source code file and demo &mdash; 23.9 К</a></li>
-	<li><a href="https://SAKryukov.github.io/web-presentation/demo">Live demo</a></li>
-</ul>
+<ul class="download"><li><a href="5291705/Working/JavaScript-Playground.zip">Download source code — 23.4 KB</a></li></ul>
 
 ![presentation.h](main.jpg)
 
@@ -287,7 +284,7 @@ const JavaScriptPlaygroundAPI = {
 }; //JavaScriptPlaygroundAPI
 ```
 
-The method `userCall` provides the basic functionality of the client part. It initializes the operation. The function `showSample` should calculate the URL for the host Web page, the content of the second `script` element containing the text of the user script, define the options and pass this data to `userCall`. This data is stored in the [`sessionStorage`](https://developer.mozilla.org/en-US/docs/Web/API/Window/sessionStorage) in the form of [`JSON`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/JSON).
+The method `userCall` provides the basic functionality of the client part. It initializes the operation. The function `showSample` should calculate the URL for the host Web page, the content of the second `script` element containing the text of the user script, define the options, and pass this data to `userCall`. This data is stored in the [`sessionStorage`](https://developer.mozilla.org/en-US/docs/Web/API/Window/sessionStorage) in the form of [`JSON`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/JSON).
 
 To see how the data is collected from the user-supplied HTML by `showSample`, see its implementation in `playgroundAPI.js`.
 
