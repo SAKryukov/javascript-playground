@@ -90,7 +90,7 @@ The context of the code is defined in the function `saveInput`. It blocks access
 
 The result of the function call is returned and its value used to populate the control below the editor control `evaluateResult`;
 
-The function `write` and `writeLine` are implemented via `console`. They have arbitrary number of arguments. This is implemented using [spread syntax](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Spread_syntax).
+The functions `write` and `writeLine` are implemented via `console`. The number of arguments they support is arbitrary. This is implemented using the [spread syntax](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Spread_syntax).
 
 The object `console` re-implements the standard [JavaScript `console` object](https://developer.mozilla.org/en-US/docs/Web/API/console).
 
