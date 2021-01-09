@@ -355,7 +355,7 @@ const setup = (
                 if (knownPosition)
                     this.writeLine([`Line: ${exceptionInstance.lineNumber - 2}, column: ${exceptionInstance.columnNumber + 1}`]); //sic! see extra lines in evaluateWith
                 if (knownPosition)
-                    this.setCaret(exceptionInstance.lineNumber - 2, exceptionInstance.columnNumber);
+                    this.setCaret(exceptionInstance.lineNumber - 3, exceptionInstance.columnNumber + 1);
             }, //showException
             toString: function() {
                 let result = String.empty;
