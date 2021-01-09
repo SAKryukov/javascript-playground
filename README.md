@@ -6,6 +6,9 @@
 
 Besides, `playgroundAPI` can be used to demonstrate pre-created code and JavaScript techniques, see `javascript-playground/demo.playgroundAPI` and [live demo](https://SAKryukov.github.io/javascript-playground/demo.playgroundAPI/).
 
+Original publication:<br/>
+[https://www.codeproject.com/Articles/5291705/JavaScript-Playground](https://www.codeproject.com/Articles/5291705/JavaScript-Playground)
+
 ## Compatibility
 
 JavaScript Playground can be used directly with nearly any modern Web browser.
