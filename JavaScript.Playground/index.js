@@ -14,11 +14,6 @@ https://www.codeproject.com/Articles/5291705/JavaScript-Playground
 
 "use strict";
 
-const evaluateWith = (text, writeLine, write, console, isStrict) => {
-    return new Function("writeLine", "write", "console", safeInput(text, isStrict))
-                        (writeLine,   write,   console);
-};
-
 const definitionSet = {
     keys: {
         evaluate: "F2",
@@ -31,7 +26,7 @@ const definitionSet = {
         consoleData: { background: "PaleGreen", foreground: "Black" },
         consoleError: { background: "Yellow", foreground: "DarkRed" },
     }, //colors
-    console: {
+   console: {
         ellipsis: String.fromCharCode(0x2026),
         assertionFailed: "Assertion failed",
         assertionFailedWithMessage: "Assertion failed:",
@@ -460,10 +455,6 @@ const setup = (
                 } //exception
             }, //timeLog
         }; // api
-        const setReadonly = target => {
-            const readonlyHandler = { set(obj, prop, value) { return false; } };
-            return new Proxy(target, readonlyHandler);
-        }; //setReadonly
         return setReadonly(api);
     })(); //consoleApi
 
@@ -837,10 +828,24 @@ const f2c = f => {
 const c2f = c => {
     return 9 / 5 * c + 32;
 } //c2f
+
+const setReadonly = target => {
+    const readonlyHandler = { set(obj, prop, value) { return false; } };
+    return new Proxy(target, readonlyHandler);
+}; //setReadonly
+
+const evaluateWith = (text, writeLine, write, console, isStrict) => {
+    return new Function("writeLineArg", "writeArg", "consoleArg", safeInput(text, isStrict))
+                        (writeLine,      write,      console);
+}; //evaluateWith
+
 const safeInput = (text, isStrict) => {
     const safeGlobals =
+        "const write = (...args) => writeArg(args);" +
+        "const writeLine = (...args) => writeLineArg(args);" +
+        "const console = consoleArg; " +
         "const document = null, window = null, navigator = null, " +
-        "globalThis = {console: console, write: write, writeLine: writeLine}";
+        "globalThis = setReadonly({console: console, write: write, writeLine: writeLine})";
     return isStrict ?
         `"use strict"; ${safeGlobals}; ${text}`
         :
