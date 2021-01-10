@@ -470,7 +470,7 @@ const setup = (
             }; //api
             evaluateResult.value = evaluateWith(
                 editor.value,
-                setReadonly(api),
+                api,
                 strictModeSwitch.checked);
         } catch (exception) {
             consoleInstance.showException(exception);
