@@ -1,6 +1,6 @@
 # JavaScript Playground
 
-[JavaScript Playground](https://SAKryukov.github.io/javascript-playground/JavaScript.Playground) can be used as an advanced [calculator](https://SAKryukov.github.io/javascript-playground/JavaScript.Playground). The result of the script execution can be viewed immediately; additionally, the [console](https://developer.mozilla.org/en-US/docs/Web/API/console) object can be used; structured console results can be browsed as it is done in the JavaScript IDE and debuggers.
+[JavaScript Playground](https://SAKryukov.github.io/javascript-playground/JavaScript.Playground) can be used as an advanced [calculator](https://SAKryukov.github.io/javascript-playground/JavaScript.Playground). The result of the script execution can be viewed immediately; additionally, the [console](https://developer.mozilla.org/en-US/docs/Web/API/console) object can be used; structured console results can be browsed as it is done in the JavaScript IDE and debuggers. With playgroundAPI, it can be used as a tool for demonstration and teaching of JavaScript techniques.
 
 [Help](https://SAKryukov.github.io/javascript-playground/JavaScript.Playground/help.html)
 
