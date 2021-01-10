@@ -106,6 +106,10 @@ In some browsers, the timing methods [console.time](https://developer.mozilla.or
 
 For the console implementation, see the function object `consoleInstance.showException(exception)` in the source code.
 
+### Console API Write Protection
+
+//SA???
+
 ### File I/O
 
 File I/O is the newest feature. It is not very usual for a Web page, but there is nothing too difficult in it. File I/O is used in three points: 1) a JavaScript text can be loaden into the editor control, 2) the content of the editor control can be saved in a file, 3) the content of the console can be converted to text (possibly with some loss of information) and saved in a text file. This is the implementation:
@@ -320,3 +324,9 @@ Well, at least I warned and suggest what can be used in my error message. In the
 [JavaScript Playground application](https://SAKryukov.github.io/javascript-playground/JavaScript.Playground)
 
 [Playground API Demo](https://SAKryukov.github.io/javascript-playground/demo.playgroundAPI)
+
+## Releases
+
+**4.0.0**: Initial release after the fork from JavaScript Calculator
+
+**4.1.0**: Added [consoleApi write protection](#heading-console-api-write-protection)
