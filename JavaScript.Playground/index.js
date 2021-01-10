@@ -805,11 +805,11 @@ const setup = (
 
 //API:
 const hex = (arg, upcase) => {
-    let hexdigit = "0123456789abcdef";
+    const hexdigit = "0123456789abcdef";
     let result = String.empty;
     if (upcase) hexdigit = hexdigit.toUpperCase();
     for (let index = 0; index < (32 / 4); ++index) {
-        indexInString = (arg >>> (index * 4)) & 0xF;
+        const indexInString = (arg >>> (index * 4)) & 0xF;
         result = hexdigit.charAt(indexInString) + result;
     } //loop
     return result;
@@ -822,12 +822,8 @@ const bin = arg => {
     } //loop
     return result;
 } //bin
-const f2c = f => {
-    return 5 / 9 * (f - 32);
-} //f2c
-const c2f = c => {
-    return 9 / 5 * c + 32;
-} //c2f
+const f2c = f => 5 / 9 * (f - 32);
+const c2f = c => 9 / 5 * c + 32;
 
 const setReadonly = target => {
     const readonlyHandler = { set(obj, prop, value) { return false; } };
