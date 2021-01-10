@@ -50,7 +50,7 @@ const evaluate = () => {
         }; //api
         evaluateResult.value = evaluateWith(
             editor.value,
-            setReadonly(api),
+            api,
             strictModeSwitch.checked);
     } catch (exception) {
         consoleInstance.showException(exception);
@@ -87,15 +87,15 @@ The result of the function call is returned and its value used to populate the c
 
 The functions `write` and `writeLine` are implemented via `console`. They are added to keep backward compatibility with the predecessor project, JavaScript Calculator. The number of arguments they support is arbitrary. This is implemented using the [spread syntax](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Spread_syntax).
 
-The object `console` re-implements the standard [JavaScript `console` object](https://developer.mozilla.org/en-US/docs/Web/API/console). The actual argument passed as `console` by `evaluate` is the object with console methods `consoleApi`.
+The object `console` re-implements the standard [JavaScript `console` object](https://developer.mozilla.org/en-US/docs/Web/API/console). The actual argument passed as `console` by `evaluate` is the object with the console methods `consoleApi`.
 
-In addition to passing the API to the user code, the code text added to the user script by `safeInput` protects the browser environment from the unsafe calls and the user script from the modification of the API objects.
+In addition to passing the API to the user code, the code text added to the user script by `safeInput` protects the browser environment from unsafe calls and the user script from the modification of the API objects.
 
 ### User Script Context Protection
 
 Why [`safeInput`](#code-core) is safe?
 
-First of all, the text added by [`safeInput`](#code-core) redefines global objects `document`, `window`, `navigator` as constants equal to `null`. This way, the access to the sensitive environment properties is blocked. Also, `globalWith` needs some protection, and it takes some more effort.
+First of all, the text added by [`safeInput`](#code-core) redefines global objects `document`, `window`, `navigator` as constants equal to `null`. This way, access to the sensitive environment properties is blocked. Also, `globalWith` needs some protection, and it takes some more effort.
 
 It is important to protect the API provided to the user code from modification. Let's consider possible troublesome pieces of the user code:
 
@@ -117,11 +117,11 @@ globalThis.console = null;
 globalThis.console.log(3);
 ```
 
-What lines with the assignment to `null` can break the execution of `console.log`? What lines can cause trouble not only to the currect execution of the user script, but also to the entire JavaScript Playground session? Both kinds of trouble are possible if proper precautions are not taken. The same goes for `write` and `writeLine`. Any attempts to assign anything an API object should cause one of the two: the assignment should be ignored or throw an exception.
+What lines with the assignment to `null` can break the execution of `console.log`? What lines can cause trouble not only to the current execution of the user script but also to the entire JavaScript Playground session? Both kinds of trouble are possible if proper precautions are not taken. The same goes for `write` and `writeLine`. Any attempts to assign anything an API object should cause one of the two: the assignment should be ignored or throw an exception.
 
-First layer of protection is not using the functions of the `api` object directly, but via the separate constact objects `write`, `writeLine` and `console`. This way, a user's attempt to assign a value to any of these object will throw an exception. Note that JavaScript arguments are always _mutable_, but, thanks to this technique, the assignment like `api = null` cannot break anything, because it can only happens after the initialization of the API objects.
+The first layer of protection is not using the functions of the `api` object directly, but via the separate constant objects `write`, `writeLine` and `console`. This way, a user's attempt to assign a value to any of these objects will throw an exception. Note that JavaScript arguments are always _mutable_, but, thanks to this technique, the assignment like `api = null` cannot break anything, because it can only happen after the initialization of the API objects.
 
-However, this along won't protect accessing these objects as `globalThis.write`, `globalThis.writeLine` or `globalThis.console`. It also won't protect the `console` object from the modification of its function members, such as `console.log` or the same methods via, for example, `globalThis.console.log`. To prevent it, it is enough to make all the member functions of `console` and `globalThis` _immutable_.
+However, this alone won't protect accessing these objects as `globalThis.write`, `globalThis.writeLine` or `globalThis.console`. It also won't protect the `console` object from the modification of its function members, such as `console.log` or the same methods via, for example, `globalThis.console.log`. To prevent it, it is enough to make all the member functions of `console` and `globalThis` _immutable_.
 
 This is the simplest method of making the properties of the object read-only based on [Proxy](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Proxy):
 
@@ -132,11 +132,13 @@ const setReadonly = target =&gt; {
 }; //setReadonly
 ```
 
-In this case, it is not recursive, only affects the properties of the object `target`. In JavaScript Playground, it is called with two objects: `consoleApi` and `globalThis`, prescribed in the form of text of the user script, see [`evaluate` and `safeInput`](#code-core).
+In this case, it is not recursive, only affects the properties of the object `target`. In JavaScript Playground, it is called with two objects: `consoleApi` and `globalThis`, prescribed in the form of the text of the user script, see [`evaluate` and `safeInput`](#code-core).
 
 ### Console
 
-When an appropriate `console` method is called for the first time, a console element is created on the right of the editor control, taking some of its horizontal space of the window. The objects passed to this `console` method are visualized in the console. If the objects are structured, the appropriate tree structure is created. The nodes of the tree are created on the fly. It resolves the problem of circular references in the object.
+The actual implementation of the object `console` passed to the [`safeInput` function](#code_core) is `consoleApi`.
+
+When an appropriate `console` method is called for the first time, a console element is created on the right of the editor control, taking some of its horizontal space of the window. The objects passed to this `console` method are visualized in the console. If the objects are structured, the appropriate tree structure is created. The nodes of the tree are created on the fly. It resolves the problem of circular references in the object. 
 
 Implemented `console` methods are [console.assert](https://developer.mozilla.org/en-US/docs/Web/API/console/assert), [console.clear](https://developer.mozilla.org/en-US/docs/Web/API/Console/clear), [console.count](https://developer.mozilla.org/en-US/docs/Web/API/Console/count), [console.debug](https://developer.mozilla.org/en-US/docs/Web/API/Console/count), [console.dir](https://developer.mozilla.org/en-US/docs/Web/API/Console/dir), [console.error](https://developer.mozilla.org/en-US/docs/Web/API/Console/error), [console.info](https://developer.mozilla.org/en-US/docs/Web/API/Console/info), [console.log](https://developer.mozilla.org/en-US/docs/Web/API/Console/log), [console.time](https://developer.mozilla.org/en-US/docs/Web/API/Console/time), [console.timeEnd](https://developer.mozilla.org/en-US/docs/Web/API/Console/time), [console.timeLog](https://developer.mozilla.org/en-US/docs/Web/API/Console/timeLog), [console.warn](https://developer.mozilla.org/en-US/docs/Web/API/Console/warn).
 
