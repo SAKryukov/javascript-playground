@@ -40,36 +40,36 @@ Later I added several useful things, such as file I/O and a fully-fledged consol
 This is the skeleton of the main script explaining the core functionality:
 
 ```{lang=JavaScript}{id=code-core}
-const evaluate = () =&gt; {
+const evaluate = () => {
     consoleInstance.reset();
     try {
+        const api = {
+            write: (...objects) =&gt; consoleInstance.write(objects),
+            writeLine: (...objects) => consoleInstance.writeLine(objects),
+            consoleApi: consoleApi,
+        }; //api
         evaluateResult.value = evaluateWith(
             editor.value,
-            (...objects) => consoleInstance.writeLine(objects),
-            (...objects) => consoleInstance.write(objects),
-            consoleApi,
+            setReadonly(api),
             strictModeSwitch.checked);
     } catch (exception) {
         consoleInstance.showException(exception);
     } //exception
     return false;
+}; //evaluate
+
+// ...
+
+const evaluateWith = (text, api, isStrict) =&gt; {
+    return new Function("api", safeInput(text, isStrict))(api);
 };
-
-//...
-
-const evaluateWith = (text, writeLine, write, console, isStrict) =&gt; {
-    return new Function(
-        "writeLineArg", "writeArg", "consoleArg", safeInput(text, isStrict))
-        (writeLine,      write,      console);
-}; //evaluateWith
 
 const safeInput = (text, isStrict) =&gt; {
     const safeGlobals =
-        "const write = (...args) => writeArg(args);" +
-        "const writeLine = (...args) => writeLineArg(args);" +
-        "const console = consoleArg; " +
-        "const document = null, window = null, navigator = null, " +
-        "globalThis = setReadonly({console: console, write: write, writeLine: writeLine})";
+        "const write = api.write, writeLine = api.writeLine," +
+        "console = api.consoleApi, document = null," +
+        "window = null, navigator = null, globalThis = " +
+        "setReadonly({console: console, write: write, writeLine: writeLine})";
     return isStrict ?
         `"use strict"; ${safeGlobals}; ${text}`
         :
@@ -77,11 +77,11 @@ const safeInput = (text, isStrict) =&gt; {
 };
 ```
 
-On the very top stack frame of the script, the string with the user JavaScript code is obtained via `editor.value` and passed to `evaluateWith` with three objects used in the context of this code, and the flag, defining if this is a [strict mode](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Strict_mode) or not.
+On the very top stack frame of the script, the string with the user JavaScript code is obtained via `editor.value` and passed to `evaluateWith` with the `api` object used in the context of this code, and the flag, defining if this is a [strict mode](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Strict_mode) or not.
 
 Note that the text of the user script is not passed to the instance of [Function](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Function/Function) and executed directly. Some _hidden_ part of code is added to the user script text. This part of the code is required to pass some API to the script. Additionally, the [strict mode](https://developer.mozilla.org/en-US/search?q=strict+mode) option and the shortcut feature [`with (Math) {}`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/with) (only for non-strict mode) are passed.
 
-The context of the code is defined in the function `saveInput`. It blocks access to the important global objects of the Web page environment: `document`, `window`, `navigator`, and, [`globalThis`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/globalThis). Three objects are made accessible through `globalThis`: `console`, `write`, and `writeLine`. These objects are implemented and passed to the user script via `evaluate` and then `evaluateWith`. Note passing the names of these objects as `new Function` arguments. The constructor returns a function object, which is called with the actual three objects. SA???
+The context of the code is defined in the function `saveInput`, and the first argument passed to the [`Function` constructor](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Function/Function) matches the word "api" in the text of the code added by `safeInput`.
 
 The result of the function call is returned and its value used to populate the control below the editor control `evaluateResult`;
 
@@ -92,6 +92,8 @@ The object `console` re-implements the standard [JavaScript `console` object](ht
 In addition to passing the API to the user code, the code text added to the user script by `safeInput` protects the browser environment from the unsafe calls and the user script from the modification of the API objects.
 
 ### User Script Context Protection
+
+Why [`safeInput`](#code-core) is safe?
 
 First of all, the text added by [`safeInput`](#code-core) redefines global objects `document`, `window`, `navigator` as constants equal to `null`. This way, the access to the sensitive environment properties is blocked. Also, `globalWith` needs some protection, and it takes some more effort.
 
@@ -115,11 +117,11 @@ globalThis.console = null;
 globalThis.console.log(3);
 ```
 
-What lines with the assignment to `null` can break the execution of `console.log`? What lines can cause trouble not only to the currect execution of the user script, but also to the entire JavaScript Playground session? Both kinds of trouble are possible if proper precautions are not taken. The same goes for `write` and `writeLine`. Any attempts to assign anything an API object should cause one of the two: the assignment should be ignored or throw an exception instead of modification.
+What lines with the assignment to `null` can break the execution of `console.log`? What lines can cause trouble not only to the currect execution of the user script, but also to the entire JavaScript Playground session? Both kinds of trouble are possible if proper precautions are not taken. The same goes for `write` and `writeLine`. Any attempts to assign anything an API object should cause one of the two: the assignment should be ignored or throw an exception.
 
-First layer of protection is not using the functions
+First layer of protection is not using the functions of the `api` object directly, but via the separate constact objects `write`, `writeLine` and `console`. This way, a user's attempt to assign a value to any of these object will throw an exception. Note that JavaScript arguments are always _mutable_, but, thanks to this technique, the assignment like `api = null` cannot break anything, because it can only happens after the initialization of the API objects.
 
-//SA???
+However, this along won't protect accessing these objects as `globalThis.write`, `globalThis.writeLine` or `globalThis.console`. It also won't protect the `console` object from the modification of its function members, such as `console.log` or the same methods via, for example, `globalThis.console.log`. To prevent it, it is enough to make all the member functions of `console` and `globalThis` _immutable_.
 
 This is the simplest method of making the properties of the object read-only based on [Proxy](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Proxy):
 
