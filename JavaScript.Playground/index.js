@@ -463,11 +463,14 @@ const setup = (
     const evaluate = () => {
         consoleInstance.reset();
         try {
+            const api = {
+                write: (...objects) => consoleInstance.write(objects),
+                writeLine: (...objects) => consoleInstance.writeLine(objects),
+                consoleApi: consoleApi,
+            }; //api
             evaluateResult.value = evaluateWith(
                 editor.value,
-                (...objects) => consoleInstance.writeLine(objects),
-                (...objects) => consoleInstance.write(objects),
-                consoleApi,
+                setReadonly(api),
                 strictModeSwitch.checked);
         } catch (exception) {
             consoleInstance.showException(exception);
@@ -830,18 +833,16 @@ const setReadonly = target => {
     return new Proxy(target, readonlyHandler);
 }; //setReadonly
 
-const evaluateWith = (text, writeLine, write, console, isStrict) => {
-    return new Function("writeLineArg", "writeArg", "consoleArg", safeInput(text, isStrict))
-                        (writeLine,      write,      console);
+const evaluateWith = (text, api, isStrict) => {
+    return new Function("api", safeInput(text, isStrict))(api);
 }; //evaluateWith
 
 const safeInput = (text, isStrict) => {
     const safeGlobals =
-        "const write = (...args) => writeArg(args);" +
-        "const writeLine = (...args) => writeLineArg(args);" +
-        "const console = consoleArg; " +
-        "const document = null, window = null, navigator = null, " +
-        "globalThis = setReadonly({console: console, write: write, writeLine: writeLine})";
+        "const write = api.write, writeLine = api.writeLine," +
+        "console = api.consoleApi, document = null," +
+        "window = null, navigator = null, globalThis = " +
+        "setReadonly({console: console, write: write, writeLine: writeLine})";
     return isStrict ?
         `"use strict"; ${safeGlobals}; ${text}`
         :
