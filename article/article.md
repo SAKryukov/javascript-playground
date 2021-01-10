@@ -37,29 +37,16 @@ Later I added several useful things, such as file I/O and a fully-fledged consol
 
 ### Core
 
-This is the skeleton of the main script explaining core functionality:
+This is the skeleton of the main script explaining the core functionality:
 
 ```{lang=JavaScript}{id=code-core}
-const evaluateWith = (text, writeLine, write, console, isStrict) &gt; {
-    return new Function(
-        "writeLine", "write", "console", safeInput(text, isStrict))
-        (writeLine,   write,   console);
-
-// ...
-
-const console = // ...
-сconst writeLine = // ...
-const write = // ...
-
-// ...
-
-const evaluate = () &gt; {
+const evaluate = () =&gt; {
     consoleInstance.reset();
     try {
         evaluateResult.value = evaluateWith(
             editor.value,
-            (...objects) &gt; consoleInstance.writeLine(objects),
-            (...objects) &gt; consoleInstance.write(objects),
+            (...objects) => consoleInstance.writeLine(objects),
+            (...objects) => consoleInstance.write(objects),
             consoleApi,
             strictModeSwitch.checked);
     } catch (exception) {
@@ -68,28 +55,82 @@ const evaluate = () &gt; {
     return false;
 };
 
-// ...
+//...
 
-const safeInput = (text, isStrict) &gt; {
+const evaluateWith = (text, writeLine, write, console, isStrict) =&gt; {
+    return new Function(
+        "writeLineArg", "writeArg", "consoleArg", safeInput(text, isStrict))
+        (writeLine,      write,      console);
+}; //evaluateWith
+
+const safeInput = (text, isStrict) =&gt; {
     const safeGlobals =
+        "const write = (...args) => writeArg(args);" +
+        "const writeLine = (...args) => writeLineArg(args);" +
+        "const console = consoleArg; " +
         "const document = null, window = null, navigator = null, " +
-        "globalThis = {console: console, write: write, writeLine: writeLine}";
+        "globalThis = setReadonly({console: console, write: write, writeLine: writeLine})";
     return isStrict ?
-        `"use strict"; ${safeGlobals}\n${text}`
+        `"use strict"; ${safeGlobals}; ${text}`
         :
-        `${safeGlobals} with (Math) \{\n${text}\n\}`;
+        `${safeGlobals}; with (Math) \{${text}\n\}`;
 };
 ```
 
 On the very top stack frame of the script, the string with the user JavaScript code is obtained via `editor.value` and passed to `evaluateWith` with three objects used in the context of this code, and the flag, defining if this is a [strict mode](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Strict_mode) or not.
 
-The context of the code is defined in the function `saveInput`. It blocks access to the important global objects of the Web page environment: `document`, `window`, `navigator`, and, [`globalThis`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/globalThis). Three objects are made accessible through `globalThis`: `console`, `write`, and `writeLine`. These objects are implemented and passed to the user script via `evaluate` and then `evaluateWith`. Note passing the names of these objects as `new Function` arguments. The constructor returns a function object, which is called with the actual three objects.
+Note that the text of the user script is not passed to the instance of [Function](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Function/Function) and executed directly. Some _hidden_ part of code is added to the user script text. This part of the code is required to pass some API to the script. Additionally, the [strict mode](https://developer.mozilla.org/en-US/search?q=strict+mode) option and the shortcut feature [`with (Math) {}`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/with) (only for non-strict mode) are passed.
+
+The context of the code is defined in the function `saveInput`. It blocks access to the important global objects of the Web page environment: `document`, `window`, `navigator`, and, [`globalThis`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/globalThis). Three objects are made accessible through `globalThis`: `console`, `write`, and `writeLine`. These objects are implemented and passed to the user script via `evaluate` and then `evaluateWith`. Note passing the names of these objects as `new Function` arguments. The constructor returns a function object, which is called with the actual three objects. SA???
 
 The result of the function call is returned and its value used to populate the control below the editor control `evaluateResult`;
 
-The functions `write` and `writeLine` are implemented via `console`. The number of arguments they support is arbitrary. This is implemented using the [spread syntax](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Spread_syntax).
+The functions `write` and `writeLine` are implemented via `console`. They are added to keep backward compatibility with the predecessor project, JavaScript Calculator. The number of arguments they support is arbitrary. This is implemented using the [spread syntax](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Spread_syntax).
 
-The object `console` re-implements the standard [JavaScript `console` object](https://developer.mozilla.org/en-US/docs/Web/API/console).
+The object `console` re-implements the standard [JavaScript `console` object](https://developer.mozilla.org/en-US/docs/Web/API/console). The actual argument passed as `console` by `evaluate` is the object with console methods `consoleApi`.
+
+In addition to passing the API to the user code, the code text added to the user script by `safeInput` protects the browser environment from the unsafe calls and the user script from the modification of the API objects.
+
+### User Script Context Protection
+
+First of all, the text added by [`safeInput`](#code-core) redefines global objects `document`, `window`, `navigator` as constants equal to `null`. This way, the access to the sensitive environment properties is blocked. Also, `globalWith` needs some protection, and it takes some more effort.
+
+It is important to protect the API provided to the user code from modification. Let's consider possible troublesome pieces of the user code:
+
+```{lang=JavaScript}{id=code-trouble-console}
+console.log(1);
+console.log = null;
+console.log(2);
+console = null;
+console.log(3);
+```
+
+or
+
+```{lang=JavaScript}{id=code-trouble-globalWith-console}
+globalThis.console.log(1);
+globalThis.console.log = null;
+globalThis.console.log(2);
+globalThis.console = null;
+globalThis.console.log(3);
+```
+
+What lines with the assignment to `null` can break the execution of `console.log`? What lines can cause trouble not only to the currect execution of the user script, but also to the entire JavaScript Playground session? Both kinds of trouble are possible if proper precautions are not taken. The same goes for `write` and `writeLine`. Any attempts to assign anything an API object should cause one of the two: the assignment should be ignored or throw an exception instead of modification.
+
+First layer of protection is not using the functions
+
+//SA???
+
+This is the simplest method of making the properties of the object read-only based on [Proxy](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Proxy):
+
+```{lang=JavaScript}{id=code-set-readonly}
+const setReadonly = target =&gt; {
+    const readonlyHandler = { set(obj, prop, value) { return false; } };
+    return new Proxy(target, readonlyHandler);
+}; //setReadonly
+```
+
+In this case, it is not recursive, only affects the properties of the object `target`. In JavaScript Playground, it is called with two objects: `consoleApi` and `globalThis`, prescribed in the form of text of the user script, see [`evaluate` and `safeInput`](#code-core).
 
 ### Console
 
@@ -105,10 +146,6 @@ The method [`console.assert(assertion, ...objects)`](https://developer.mozilla.o
 In some browsers, the timing methods [console.time](https://developer.mozilla.org/en-US/docs/Web/API/Console/time), [console.timeEnd](https://developer.mozilla.org/en-US/docs/Web/API/Console/timeEnd), [console.timeLog](https://developer.mozilla.org/en-US/docs/Web/API/Console/timeLog) may present accuracy problems. The time reading can be rounded or slightly randomized by a particular browser. At the moment of writing, correct timing was observed in Blink+V8-based browsers, such as Chromium, Chrome, Opera, and Vivaldi. Rounding was observed in the browsers using [SpiderMonkey](https://en.wikipedia.org/wiki/SpiderMonkey). For further information, please see [this documentation page](https://developer.mozilla.org/en-US/docs/Web/API/Performance/now).
 
 For the console implementation, see the function object `consoleInstance.showException(exception)` in the source code.
-
-### Console API Write Protection
-
-//SA???
 
 ### File I/O
 
@@ -329,4 +366,4 @@ Well, at least I warned and suggest what can be used in my error message. In the
 
 **4.0.0**: Initial release after the fork from JavaScript Calculator
 
-**4.1.0**: Added [consoleApi write protection](#heading-console-api-write-protection)
+**4.1.0**: Added [user script context protection](#heading-user-script-context-protection)
