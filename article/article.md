@@ -8,7 +8,7 @@
 
 JavaScript Playground, JavaScript calculator, development, and demo tool
 
-*JavaScript Playground can be used as an advanced calculator. The result of the script execution can be viewed immediately; additionally, the console object can be used; structured console results can be browsed as it is done in the JavaScript IDE and debuggers. With playgroundAPI, it can be used as a tool for demonstration and teaching of JavaScript code techniques.*
+*JavaScript Playground can be used as an advanced calculator. The result of the script execution can be viewed immediately; additionally, the console object can be used; structured console results can be browsed as it is done in the JavaScript IDE and debuggers. With playgroundAPI, it can be used as a tool for demonstration and teaching of JavaScript techniques.*
 
 <!-- copy to CodeProject from here ------------------------------------------->
 
