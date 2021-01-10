@@ -410,55 +410,62 @@ const setup = (
         fileIO.storeFile(definitionSet.textFeatures.defaultOutputFileName, consoleInstance.toString());
     }; //downloadButton.onclick
 
-const consoleApi = {
-        assert: (assertion, ...objectsToDisplay) => {
-            if (assertion) return;
-            let resultingArguments = (objectsToDisplay.length > 0) ?
-                [definitionSet.console.assertionFailedWithMessage] : [definitionSet.console.assertionFailed];
-            resultingArguments = resultingArguments.concat(objectsToDisplay);
-            consoleInstance.writeMixedArguments(resultingArguments, definitionSet.consoleStyles.assert);    
-        }, //assert
-        clear: () => { console.innerHTML = String.empty; },
-        count: () => { return console.childElementCount; },
-        debug: (...objects) => { consoleInstance.writeMixedArguments(objects, definitionSet.consoleStyles.debug); },
-        dir: (...objects) => { consoleInstance.writeMixedArguments(objects, definitionSet.consoleStyles.dir); },
-        error: (...objects) => { consoleInstance.writeMixedArguments(objects, definitionSet.consoleStyles.error); },
-        info: (...objects) => { consoleInstance.writeMixedArguments(objects, definitionSet.consoleStyles.info); },
-        log: (...objects) => { consoleInstance.writeMixedArguments(objects, definitionSet.consoleStyles.log); },
-        warn: (...objects) => { consoleInstance.writeMixedArguments(objects, definitionSet.consoleStyles.warn); },
-        countReset: () => { consoleInstance.writeMixedArguments([definitionSet.console.methodNotImplemented("countReset")], definitionSet.consoleStyles.notImplementedError); },
-        dirxml: () => { consoleInstance.writeMixedArguments([definitionSet.console.methodNotImplemented("dirxml")], definitionSet.consoleStyles.notImplementedError); },
-        group: () => { consoleInstance.writeMixedArguments([definitionSet.console.methodNotImplemented("group")], definitionSet.consoleStyles.notImplementedError); },
-        groupCollapsed: () => { consoleInstance.writeMixedArguments([definitionSet.console.methodNotImplemented("groupCollapsed")], definitionSet.consoleStyles.notImplementedError); },
-        groupEnd: () => { consoleInstance.writeMixedArguments([definitionSet.console.methodNotImplemented("groupEnd")], definitionSet.consoleStyles.notImplementedError); },
-        profile: () => { consoleInstance.writeMixedArguments([definitionSet.console.methodNotImplemented("profile")], definitionSet.consoleStyles.notImplementedError); },
-        profileEnd: () => { consoleInstance.writeMixedArguments([definitionSet.console.methodNotImplemented("profileEnd")], definitionSet.consoleStyles.notImplementedError); },
-        table: () => { consoleInstance.writeMixedArguments([definitionSet.console.methodNotImplemented("table")], definitionSet.consoleStyles.notImplementedError); },
-        timeStamp: () => { consoleInstance.writeMixedArguments([definitionSet.console.methodNotImplemented("timeStamp")], definitionSet.consoleStyles.notImplementedError); },
-        trace: () => { consoleInstance.writeMixedArguments([definitionSet.console.methodNotImplemented("trace")], definitionSet.consoleStyles.notImplementedError); },
-        time: label => { performance.mark(consoleInstance.adjustTimerLabel(label)); },
-        timeEnd: function(label) {
-            label = consoleInstance.adjustTimerLabel(label);
-            this.timeLog(label);
-            performance.clearMarks(label);
-            performance.clearMeasures(label);
-        }, //timeEnd
-        timeLog: function(label) {
-            const now = performance.now(); //as early as possible
-            label = consoleInstance.adjustTimerLabel(label);
-            try {
-                const oldMeasure = performance.getEntriesByName(label, definitionSet.console.timerMarkType);
-                if (oldMeasure.length < 1) {
-                    this.error(definitionSet.console.noTimer(label));
-                    return;    
-                } //if
-                consoleInstance.writeMixedArguments([definitionSet.console.timerDuration(label, now - oldMeasure[0].startTime)],
-                    definitionSet.consoleStyles.timer);
-            } catch (ex) {
-                this.error(ex.message);
-            } //exception
-        }, //timeLog
-    } //consoleApi
+    const consoleApi = (() => {
+        const api = {
+            assert: (assertion, ...objectsToDisplay) => {
+                if (assertion) return;
+                let resultingArguments = (objectsToDisplay.length > 0) ?
+                    [definitionSet.console.assertionFailedWithMessage] : [definitionSet.console.assertionFailed];
+                resultingArguments = resultingArguments.concat(objectsToDisplay);
+                consoleInstance.writeMixedArguments(resultingArguments, definitionSet.consoleStyles.assert);
+            }, //assert
+            clear: () => { console.innerHTML = String.empty; },
+            count: () => { return console.childElementCount; },
+            debug: (...objects) => { consoleInstance.writeMixedArguments(objects, definitionSet.consoleStyles.debug); },
+            dir: (...objects) => { consoleInstance.writeMixedArguments(objects, definitionSet.consoleStyles.dir); },
+            error: (...objects) => { consoleInstance.writeMixedArguments(objects, definitionSet.consoleStyles.error); },
+            info: (...objects) => { consoleInstance.writeMixedArguments(objects, definitionSet.consoleStyles.info); },
+            log: (...objects) => { consoleInstance.writeMixedArguments(objects, definitionSet.consoleStyles.log); },
+            warn: (...objects) => { consoleInstance.writeMixedArguments(objects, definitionSet.consoleStyles.warn); },
+            countReset: () => { consoleInstance.writeMixedArguments([definitionSet.console.methodNotImplemented("countReset")], definitionSet.consoleStyles.notImplementedError); },
+            dirxml: () => { consoleInstance.writeMixedArguments([definitionSet.console.methodNotImplemented("dirxml")], definitionSet.consoleStyles.notImplementedError); },
+            group: () => { consoleInstance.writeMixedArguments([definitionSet.console.methodNotImplemented("group")], definitionSet.consoleStyles.notImplementedError); },
+            groupCollapsed: () => { consoleInstance.writeMixedArguments([definitionSet.console.methodNotImplemented("groupCollapsed")], definitionSet.consoleStyles.notImplementedError); },
+            groupEnd: () => { consoleInstance.writeMixedArguments([definitionSet.console.methodNotImplemented("groupEnd")], definitionSet.consoleStyles.notImplementedError); },
+            profile: () => { consoleInstance.writeMixedArguments([definitionSet.console.methodNotImplemented("profile")], definitionSet.consoleStyles.notImplementedError); },
+            profileEnd: () => { consoleInstance.writeMixedArguments([definitionSet.console.methodNotImplemented("profileEnd")], definitionSet.consoleStyles.notImplementedError); },
+            table: () => { consoleInstance.writeMixedArguments([definitionSet.console.methodNotImplemented("table")], definitionSet.consoleStyles.notImplementedError); },
+            timeStamp: () => { consoleInstance.writeMixedArguments([definitionSet.console.methodNotImplemented("timeStamp")], definitionSet.consoleStyles.notImplementedError); },
+            trace: () => { consoleInstance.writeMixedArguments([definitionSet.console.methodNotImplemented("trace")], definitionSet.consoleStyles.notImplementedError); },
+            time: label => { performance.mark(consoleInstance.adjustTimerLabel(label)); },
+            timeEnd: function (label) {
+                label = consoleInstance.adjustTimerLabel(label);
+                this.timeLog(label);
+                performance.clearMarks(label);
+                performance.clearMeasures(label);
+            }, //timeEnd
+            timeLog: function (label) {
+                const now = performance.now(); //as early as possible
+                label = consoleInstance.adjustTimerLabel(label);
+                try {
+                    const oldMeasure = performance.getEntriesByName(label, definitionSet.console.timerMarkType);
+                    if (oldMeasure.length < 1) {
+                        this.error(definitionSet.console.noTimer(label));
+                        return;
+                    } //if
+                    consoleInstance.writeMixedArguments([definitionSet.console.timerDuration(label, now - oldMeasure[0].startTime)],
+                        definitionSet.consoleStyles.timer);
+                } catch (ex) {
+                    this.error(ex.message);
+                } //exception
+            }, //timeLog
+        }; // api
+        const setReadonly = target => {
+            const readonlyHandler = { set(obj, prop, value) { return false; } };
+            return new Proxy(target, readonlyHandler);
+        }; //setReadonly
+        return setReadonly(api);
+    })(); //consoleApi
 
     strictModeSwitch.onchange = () => { JavaScriptPlaygroundAPI.reload(editor.value, strictModeSwitch.checked); };
 
