@@ -56,7 +56,7 @@ const evaluate = () => {
         consoleInstance.showException(exception);
     } //exception
     return false;
-}; //evaluate
+};
 
 // ...
 
@@ -129,7 +129,7 @@ This is the simplest method of making the properties of the object read-only bas
 const setReadonly = target =&gt; {
     const readonlyHandler = { set(obj, prop, value) { return false; } };
     return new Proxy(target, readonlyHandler);
-}; //setReadonly
+};
 ```
 
 In this case, it is not recursive, only affects the properties of the object `target`. In JavaScript Playground, it is called with two objects: `consoleApi` and `globalThis`, prescribed in the form of the text of the user script, see [`evaluate` and `safeInput`](#code-core).
@@ -276,8 +276,7 @@ This is the simplest example of the client code using `playgroundAPI`:
 
 ```{lang=HTML}{id=code-playgroundAPI-sample}
 &lt;!DOCTYPE html&gt;
-&lt;script src="../JavaScript.Playground/playgroundAPI.js"&gt;
-&lt;/script&gt;
+&lt;script src="../JavaScript.Playground/playgroundAPI.js"&gt;&lt;/script&gt;
 &lt;script&gt;
 
 return "Write some code and press Ctrl+Enter"
@@ -294,8 +293,11 @@ The core implementation object `JavaScriptPlaygroundAPI` implements functionalit
 
 ```{lang=JavaScript}{id=code-playground-api}
 const JavaScriptPlaygroundAPI = {
+   
    APIDataKey: "S. A. Kryukov JavaScript Playground API",
+   
    storage: sessionStorage,
+   
    userCall: function (path, code, title, doNotEvaluate, strict) {
       this.storage.setItem(this.APIDataKey,
         JSON.stringify({
@@ -305,7 +307,9 @@ const JavaScriptPlaygroundAPI = {
             title: title }));
       document.location = path;
    },
+   
    // host's internal:
+   
    reload: function (code, isStrict) {
       this.storage.setItem(this.APIDataKey,
         JSON.stringify({
@@ -314,6 +318,7 @@ const JavaScriptPlaygroundAPI = {
             strict: isStrict }));
       window.location.reload(false);
    },
+   
    onLoad: function (handler) {
       const item = this.storage.getItem(this.APIDataKey);
       this.storage.removeItem(this.APIDataKey);
@@ -326,7 +331,8 @@ const JavaScriptPlaygroundAPI = {
             script.doNotEvaluate,
             script.strict);
    },
-}; //JavaScriptPlaygroundAPI
+
+};
 ```
 
 The method `userCall` provides the basic functionality of the client part. It initializes the operation. The function `showSample` should calculate the URL for the host Web page, the content of the second `script` element containing the text of the user script, define the options, and pass this data to `userCall`. This data is stored in the [`sessionStorage`](https://developer.mozilla.org/en-US/docs/Web/API/Window/sessionStorage) in the form of [`JSON`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/JSON).
@@ -370,4 +376,4 @@ Well, at least I warned and suggest what can be used in my error message. In the
 
 **4.0.0**: Initial release after the fork from JavaScript Calculator
 
-**4.1.0**: Added [user script context protection](#heading-user-script-context-protection)
+**4.1.0**: Introduced comprehensive [user script context protection](#heading-user-script-context-protection)
