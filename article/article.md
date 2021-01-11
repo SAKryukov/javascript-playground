@@ -40,6 +40,10 @@ Later I added several useful things, such as file I/O and a fully-fledged consol
 This is the skeleton of the main script explaining the core functionality:
 
 ```{lang=JavaScript}{id=code-core}
+
+const consoleInstance = //...
+const consoleApi = // ...
+
 const evaluate = () => {
     consoleInstance.reset();
     try {
@@ -55,7 +59,6 @@ const evaluate = () => {
     } catch (exception) {
         consoleInstance.showException(exception);
     } //exception
-    return false;
 };
 
 // ...
@@ -85,7 +88,7 @@ The context of the code is defined in the function `saveInput`, and the first ar
 
 The result of the function call is returned and its value used to populate the control below the editor control `evaluateResult`;
 
-The functions `write` and `writeLine` are implemented via `console`. They are added to keep backward compatibility with the predecessor project, JavaScript Calculator. The number of arguments they support is arbitrary. This is implemented using the [spread syntax](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Spread_syntax).
+The functions `write` and `writeLine` are implemented via `consoleInstance`, which is also used to implement `consoleApi`. They are added to keep backward compatibility with the predecessor project, JavaScript Calculator. The number of arguments they support is arbitrary. This is implemented using the [spread syntax](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Spread_syntax).
 
 The object `console` re-implements the standard [JavaScript `console` object](https://developer.mozilla.org/en-US/docs/Web/API/console). The actual argument passed as `console` by `evaluate` is the object with the console methods `consoleApi`.
 
