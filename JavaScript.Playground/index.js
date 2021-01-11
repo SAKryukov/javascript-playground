@@ -475,7 +475,6 @@ const setup = (
         } catch (exception) {
             consoleInstance.showException(exception);
         } //exception
-        return false;
     }; //evaluate
 
     document.onkeydown = (event) => {
