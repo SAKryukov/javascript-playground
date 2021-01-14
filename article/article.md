@@ -265,6 +265,24 @@ The [code sample shown above](#code-lexical-error-capture) will show the alert `
 
 You can consider this as a method of "converting all errors into exceptions". All errors will be covered by common [exception handling](#heading-excepton-handling).
 
+### Protection from Losing Data
+
+This feature is trivial, but I want to describe it, due to the ababdance of recipies working or not working for different browsers. To best of my knowledge, I put together the techniques to cover most browser peculiarities.
+
+The user can easily unintentionally reload the page or remove it by closing its tab or window. If a user has some potentially valuable code in the `edit` control or data in console, the user confirmation is required. This is how to achieve it:
+
+```{lang=JavaScript}{id=code-unload-protection}
+window.addEventListener('beforeunload', function (event) { // sic!
+    if (!consoleInstance.goodToQuit() || editor.value.trim().length > 0) {
+        event.preventDefault(); // guarantees showing confirmation dialog
+        event.returnValue = true; // show confirmation dialog
+    } else // to guarantee unconditional unload
+        delete(event.returnValue);
+});
+```
+
+Not all lines of this code are absolutely required: deletion of `event.returnValue` could be replaced with the assignment to `undefined`, and `event.preventDefault()` might be redundant. However, there can be chances that in certain situations for certain browsers these lines will be essential. See [this documentation page]()https://developer.mozilla.org/en-US/docs/Web/API/WindowEventHandlers/onbeforeunload for more detail.
+
 ## Playground API
 
 The idea behind `playgroundAPI` is to pass some script to the main JavaScript Playground application "index.html", populate the value of the `editor` control with the script text, and optionally execute it in the main application, optionally in strict mode. In this kind of usage, let's consider the main JavaScript Playground application as a "host", used by the "client" part written by the user.
@@ -379,4 +397,4 @@ Well, at least I warned and suggest what can be used in my error message. In the
 
 **4.0.0**: Initial release after the fork from JavaScript Calculator
 
-**4.1.0**: Introduced comprehensive [user script context protection](#heading-user-script-context-protection)
+**4.1.0**: Introduced comprehensive [user script context protection](#heading-user-script-context-protection) and [protection from losing data](#heading-protection-from-losing-data).
