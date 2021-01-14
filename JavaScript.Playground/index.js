@@ -807,13 +807,13 @@ const setup = (
 
     editor.focus();
 
-    window.addEventListener('beforeunload', function (e) { // protect from losing unsaved data
+    window.addEventListener('beforeunload', function (event) { // protect from losing unsaved data
         if (!consoleInstance.goodToQuit() || editor.value.trim().length > 0) { // guarantee unload prompt for all browsers:
-            e.preventDefault();
-            e.returnValue = true; // show confirmation dialog!
-        } else // guarantee unconditional unload for all browsers:
-            delete(e.returnValue);
-    }); //// protect from losing unsaved data
+            event.preventDefault(); // guarantees showing confirmation dialog
+            event.returnValue = true; // show confirmation dialog
+        } else // to guarantee unconditional unload
+            delete(event.returnValue);
+    }); // protect from losing unsaved data
 
 }; //setup
 
