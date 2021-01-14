@@ -364,6 +364,10 @@ const setup = (
                 } //loop
                 return result;
             }, //toString
+            goodToQuit: function() {
+                return !this.showing ||
+                console.innerHTML.trim().length < 1;
+            }, //goodToQuit
         }; //consoleInstance
         splitter.onmousedown = ev => {
             if (ev.button != 0) return;
@@ -804,7 +808,7 @@ const setup = (
     editor.focus();
 
     window.addEventListener('beforeunload', function (e) { // protect from losing unsaved data
-        if (editor.value.trim().length > 0) { // guarantee unload prompt for all browsers:
+        if (!consoleInstance.goodToQuit() || editor.value.trim().length > 0) { // guarantee unload prompt for all browsers:
             e.preventDefault();
             e.returnValue = true; // show confirmation dialog!
         } else // guarantee unconditional unload for all browsers:
