@@ -281,7 +281,7 @@ window.addEventListener('beforeunload', function (event) { // sic!
 });
 ```
 
-Not all lines of this code are absolutely required: deletion of `event.returnValue` could be replaced with the assignment to `undefined`, and `event.preventDefault()` might be redundant. However, there can be chances that in certain situations for certain browsers these lines will be essential. See [this documentation page]()https://developer.mozilla.org/en-US/docs/Web/API/WindowEventHandlers/onbeforeunload for more detail.
+Not all lines of this code are absolutely required: deletion of `event.returnValue` could be replaced with the assignment to `undefined`, and `event.preventDefault()` might be redundant. However, there can be chances that in certain situations for certain browsers these lines will be essential. See [this documentation page](https://developer.mozilla.org/en-US/docs/Web/API/WindowEventHandlers/onbeforeunload) for more detail.
 
 ## Playground API
 
