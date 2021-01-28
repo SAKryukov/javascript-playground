@@ -75,8 +75,10 @@ const JavaScriptPlaygroundAPI = {
       document.location = path;
    },
    // host's internal:
+   forceReload: false,
    reload: function (code, isStrict) {
-      this.storage.setItem(this.APIDataKey, JSON.stringify({ code: editor.value, doNotEvaluate: true, strict: isStrict }));
+      this.storage.setItem(this.APIDataKey, JSON.stringify({ code: code, doNotEvaluate: true, strict: isStrict }));
+      this.forceReload = true;
       window.location.reload(false);
    },
    onLoad: function (handler) {

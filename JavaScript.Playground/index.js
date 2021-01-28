@@ -807,8 +807,10 @@ const setup = (
 
     editor.focus();
 
-    window.addEventListener('beforeunload', function (event) { // protect from losing unsaved data
-        if (!consoleInstance.goodToQuit() || editor.value.trim().length > 0) { // guarantee unload prompt for all browsers:
+    window.addEventListener("beforeunload", function (event) { // protect from losing unsaved data
+        const requiresConfirmation = !JavaScriptPlaygroundAPI.forceReload &&
+            (!consoleInstance.goodToQuit() || editor.value.trim().length > 0);
+        if (requiresConfirmation) { // guarantee unload prompt for all browsers:
             event.preventDefault(); // guarantees showing confirmation dialog
             event.returnValue = true; // show confirmation dialog
         } else // to guarantee unconditional unload
