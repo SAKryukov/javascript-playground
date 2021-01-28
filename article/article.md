@@ -273,7 +273,9 @@ The user can easily unintentionally reload the page or remove it by closing its 
 
 ```{lang=JavaScript}{id=code-unload-protection}
 window.addEventListener('beforeunload', function (event) { // sic!
-    if (!consoleInstance.goodToQuit() || editor.value.trim().length > 0) {
+    const requiresConfirmation = !JavaScriptPlaygroundAPI.forceReload &&
+        (!consoleInstance.goodToQuit() || editor.value.trim().length > 0);
+    if (requiresConfirmation) {
         event.preventDefault(); // guarantees showing confirmation dialog
         event.returnValue = true; // show confirmation dialog
     } else // to guarantee unconditional unload
@@ -331,12 +333,14 @@ const JavaScriptPlaygroundAPI = {
    
    // host's internal:
    
+   forceReload: false,
    reload: function (code, isStrict) {
       this.storage.setItem(this.APIDataKey,
         JSON.stringify({
             code: editor.value,
             doNotEvaluate: true,
             strict: isStrict }));
+      this.forceReload = true;
       window.location.reload(false);
    },
    
@@ -398,3 +402,5 @@ Well, at least I warned and suggest what can be used in my error message. In the
 **4.0.0**: Initial release after the fork from JavaScript Calculator
 
 **4.1.0**: Introduced comprehensive [user script context protection](#heading-user-script-context-protection) and [protection from losing data](#heading-protection-from-losing-data).
+
+**4.2.0**: Fixed [protection from losing data](#heading-protection-from-losing-data) for strict mode reload.
