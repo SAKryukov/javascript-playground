@@ -75,12 +75,6 @@ const JavaScriptPlaygroundAPI = {
       document.location = path;
    },
    // host's internal:
-   forceReload: false,
-   reload: function (code, isStrict) {
-      this.storage.setItem(this.APIDataKey, JSON.stringify({ code: code, doNotEvaluate: true, strict: isStrict }));
-      this.forceReload = true;
-      window.location.reload(false);
-   },
    onLoad: function (handler) {
       const item = this.storage.getItem(this.APIDataKey);
       this.storage.removeItem(this.APIDataKey);

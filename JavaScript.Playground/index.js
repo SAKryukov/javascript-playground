@@ -462,10 +462,13 @@ const setup = (
         return setReadonly(api);
     })(); //consoleApi
 
-    strictModeSwitch.onchange = () => { JavaScriptPlaygroundAPI.reload(editor.value, strictModeSwitch.checked); };
-
     const evaluate = () => {
+        const isStrictMode = strictModeSwitch.checked;
         consoleInstance.reset();
+        const globalSet = new Map();
+        if (!isStrictMode)
+            for (let property in globalThis)
+                globalSet.set(property, globalThis[property]);
         try {
             const api = {
                 write: (...objects) => consoleInstance.write(objects),
@@ -475,9 +478,19 @@ const setup = (
             evaluateResult.value = evaluateWith(
                 editor.value,
                 api,
-                strictModeSwitch.checked);
+                isStrictMode);
         } catch (exception) {
             consoleInstance.showException(exception);
+        } finally { 
+            if (isStrictMode) return;
+            const changedGlobalSet = new Map();
+            for (let property in globalThis)
+                changedGlobalSet.set(property, changedGlobalSet[property]);
+            for (let property of changedGlobalSet.keys())
+                if (!globalSet.has(property))
+                    delete globalThis[property];
+            changedGlobalSet.clear();
+            globalSet.clear();
         } //exception
     }; //evaluate
 
@@ -808,7 +821,7 @@ const setup = (
     editor.focus();
 
     window.addEventListener("beforeunload", function (event) { // protect from losing unsaved data
-        const requiresConfirmation = !JavaScriptPlaygroundAPI.forceReload &&
+        const requiresConfirmation =
             (!consoleInstance.goodToQuit() || editor.value.trim().length > 0);
         if (requiresConfirmation) { // guarantee unload prompt for all browsers:
             event.preventDefault(); // guarantees showing confirmation dialog
