@@ -45,19 +45,34 @@ const consoleInstance = //...
 const consoleApi = // ...
 
 const evaluate = () => {
+    const isStrictMode = strictModeSwitch.checked;
     consoleInstance.reset();
+    const globalSet = new Map();
+    if (!isStrictMode)
+        for (let property in globalThis)
+            globalSet.set(property, globalThis[property]);
     try {
         const api = {
-            write: (...objects) =&gt; consoleInstance.write(objects),
+            write: (...objects) => consoleInstance.write(objects),
             writeLine: (...objects) => consoleInstance.writeLine(objects),
             consoleApi: consoleApi,
         }; //api
         evaluateResult.value = evaluateWith(
             editor.value,
             api,
-            strictModeSwitch.checked);
+            isStrictMode);
     } catch (exception) {
         consoleInstance.showException(exception);
+    } finally { 
+        if (isStrictMode) return;
+        const changedGlobalSet = new Map();
+        for (let property in globalThis)
+            changedGlobalSet.set(property, changedGlobalSet[property]);
+        for (let property of changedGlobalSet.keys())
+            if (!globalSet.has(property))
+                delete globalThis[property];
+        changedGlobalSet.clear();
+        globalSet.clear();
     } //exception
 };
 
@@ -136,6 +151,35 @@ const setReadonly = target =&gt; {
 ```
 
 In this case, it is not recursive, only affects the properties of the object `target`. In JavaScript Playground, it is called with two objects: `consoleApi` and `globalThis`, prescribed in the form of the text of the user script, see [`evaluate` and `safeInput`](#code-core).
+
+### Host Context Protection
+
+Having the [user script context problem](#heading-user-script-context-protection) solved, we still have a problem presented by the non-strict mode. This mode is really nasty: when we create a top-level object, it is created in the global scope as a property of [globalThis](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/globalThis).
+
+It contaminates the global scope of the host application. Yes, it happens even if the user script is executed by the [`Function` constructor](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Function/Function). To realize how bad it is, let's consider the following simple example:
+
+```{lang=JavaScript}
+// strict mode:
+x = 10
+```
+Due to the strict mode, it is supposed to throw an exception "ReferenceError: x is not defined". Will it happen? Not always. The answer depends on the prehistory of the entire JavaScript Playground session. Let's do the following exercise: switch to the non-strict mode and execute:
+
+```{lang=JavaScript}
+// non-strict mode:
+x = 11
+```
+Then switch to the strict mode and execute
+
+```{lang=JavaScript}
+// strict mode again:
+x = 12 // fine!
+y = 13 // ReferenceError: y is not defined
+```
+The assignment to `x` will work because in the strict mode the code will modify `globalThis.x`, defined in the global scope of the host application by the prior run of the user script in the non-strict mode.
+
+Prior to version v.&thinsp;4.2.0, the problem was solved by re-loading of the host application page via [`window.location.reload`](https://developer.mozilla.org/en-US/docs/Web/API/Location/reload) every time the "Strict Mode" control value was modified. It complicated things and became a big problem for the [protection from losing data](#heading-protection-from-losing-data) feature.
+
+Since v.&thinsp;4.2.0, the host application context is protected by registering the properties of `globalThis` before and after the execution of a user script in the non-strict mode. After the execution, the properties created by the user script are removed. For further detail, please see in `globalSet` and `changedGlobalSet` in [`evaluate`](#code-core).
 
 ### Console
 
@@ -273,7 +317,7 @@ The user can easily unintentionally reload the page or remove it by closing its 
 
 ```{lang=JavaScript}{id=code-unload-protection}
 window.addEventListener('beforeunload', function (event) { // sic!
-    const requiresConfirmation = !JavaScriptPlaygroundAPI.forceReload &&
+    const requiresConfirmation =
         (!consoleInstance.goodToQuit() || editor.value.trim().length > 0);
     if (requiresConfirmation) {
         event.preventDefault(); // guarantees showing confirmation dialog
@@ -333,17 +377,6 @@ const JavaScriptPlaygroundAPI = {
    
    // host's internal:
    
-   forceReload: false,
-   reload: function (code, isStrict) {
-      this.storage.setItem(this.APIDataKey,
-        JSON.stringify({
-            code: editor.value,
-            doNotEvaluate: true,
-            strict: isStrict }));
-      this.forceReload = true;
-      window.location.reload(false);
-   },
-   
    onLoad: function (handler) {
       const item = this.storage.getItem(this.APIDataKey);
       this.storage.removeItem(this.APIDataKey);
@@ -366,6 +399,7 @@ To see how the data is collected from the user-supplied HTML by `showSample`, se
 
 After the user HTML to the host Web page, it is loaded and calls `JavaScriptPlaygroundAPI.onLoad`. If the content of `sessionStorage` is found by the key `APIDataKey` and evaluates to `true`, and the script text is not empty, `JavaScriptPlaygroundAPI.onLoad` calls the `handler` supplied by the host JavaScript Playground application. Depending on the options passed via JSON content, the host changes the page title, populates the `editor` element, optionally switched to the strict or non-strict mode, and optionally executes the user script code.
 
+SA???
 The method `reload` is needed when the user changes the state of the "Strict Mode" control on the host Web page.
 
 To find out the detail of the implementation of the host Web page behavior, please the fragments of the code by `JavaScriptPlaygroundAPI.` in "index.js".
@@ -403,4 +437,4 @@ Well, at least I warned and suggest what can be used in my error message. In the
 
 **4.1.0**: Introduced comprehensive [user script context protection](#heading-user-script-context-protection) and [protection from losing data](#heading-protection-from-losing-data).
 
-**4.2.0**: Fixed [protection from losing data](#heading-protection-from-losing-data) for strict mode reload.
+**4.2.0**: Introduced [host context protection](#heading-host-context-protection), eliminated reloading of the host application on the modification of the "Strict Mode" control value.
