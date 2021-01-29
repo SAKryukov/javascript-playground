@@ -462,13 +462,24 @@ const setup = (
         return setReadonly(api);
     })(); //consoleApi
 
+    const hostApplicationContextCleanup = (() => {
+        const globalSet = new Set();
+        for (let property in globalThis)
+            globalSet.add(property);
+        return () => {
+            const currectSet = [];
+            for (let property in globalThis)
+                currectSet.push(property);
+            for (let property of currectSet)
+                if (!globalSet.has(property))
+                    delete globalThis[property];
+            currectSet.splice(0);
+        };
+    })(); //hostApplicationContextCleanup
+
     const evaluate = () => {
         const isStrictMode = strictModeSwitch.checked;
         consoleInstance.reset();
-        const globalSet = new Map();
-        if (!isStrictMode)
-            for (let property in globalThis)
-                globalSet.set(property, globalThis[property]);
         try {
             const api = {
                 write: (...objects) => consoleInstance.write(objects),
@@ -483,14 +494,7 @@ const setup = (
             consoleInstance.showException(exception);
         } finally { 
             if (isStrictMode) return;
-            const changedGlobalSet = new Map();
-            for (let property in globalThis)
-                changedGlobalSet.set(property, changedGlobalSet[property]);
-            for (let property of changedGlobalSet.keys())
-                if (!globalSet.has(property))
-                    delete globalThis[property];
-            changedGlobalSet.clear();
-            globalSet.clear();
+            hostApplicationContextCleanup();
         } //exception
     }; //evaluate
 
