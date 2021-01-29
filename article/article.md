@@ -409,9 +409,6 @@ To see how the data is collected from the user-supplied HTML by `showSample`, se
 
 After the user HTML to the host Web page, it is loaded and calls `JavaScriptPlaygroundAPI.onLoad`. If the content of `sessionStorage` is found by the key `APIDataKey` and evaluates to `true`, and the script text is not empty, `JavaScriptPlaygroundAPI.onLoad` calls the `handler` supplied by the host JavaScript Playground application. Depending on the options passed via JSON content, the host changes the page title, populates the `editor` element, optionally switched to the strict or non-strict mode, and optionally executes the user script code.
 
-SA???
-The method `reload` is needed when the user changes the state of the "Strict Mode" control on the host Web page.
-
 To find out the detail of the implementation of the host Web page behavior, please the fragments of the code by `JavaScriptPlaygroundAPI.` in "index.js".
 
 ### Limitations
