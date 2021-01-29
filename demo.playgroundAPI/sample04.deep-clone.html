@@ -12,6 +12,6 @@ const inner = { toString:function() {return "clonable" }, a: 1, b: 3 }
 const outer = { toString:function() {return "clonable" }, c:"outer", d: inner}
 const clone = deepClone(outer);
 
-console.log("Original:", outer, "Deep clone:", clone, "Standard Object clone:", standardClone);
+console.log("Original:", outer, "Deep clone:", clone);
 
 </script><script>showSample();</script>
