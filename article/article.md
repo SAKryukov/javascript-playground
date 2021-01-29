@@ -44,17 +44,13 @@ This is the skeleton of the main script explaining the core functionality:
 const consoleInstance = //...
 const consoleApi = // ...
 
-const evaluate = () => {
+const evaluate = () =&gt; {
     const isStrictMode = strictModeSwitch.checked;
     consoleInstance.reset();
-    const globalSet = new Map();
-    if (!isStrictMode)
-        for (let property in globalThis)
-            globalSet.set(property, globalThis[property]);
     try {
         const api = {
-            write: (...objects) => consoleInstance.write(objects),
-            writeLine: (...objects) => consoleInstance.writeLine(objects),
+            write: (...objects) =&gt; consoleInstance.write(objects),
+            writeLine: (...objects) =&gt; consoleInstance.writeLine(objects),
             consoleApi: consoleApi,
         }; //api
         evaluateResult.value = evaluateWith(
@@ -64,15 +60,8 @@ const evaluate = () => {
     } catch (exception) {
         consoleInstance.showException(exception);
     } finally { 
-        if (isStrictMode) return;
-        const changedGlobalSet = new Map();
-        for (let property in globalThis)
-            changedGlobalSet.set(property, changedGlobalSet[property]);
-        for (let property of changedGlobalSet.keys())
-            if (!globalSet.has(property))
-                delete globalThis[property];
-        changedGlobalSet.clear();
-        globalSet.clear();
+        if (!isStrictMode)
+            hostApplicationContextCleanup();
     } //exception
 };
 
@@ -168,6 +157,7 @@ Due to the strict mode, it is supposed to throw an exception "ReferenceError: x 
 // non-strict mode:
 x = 11
 ```
+
 Then switch to the strict mode and execute
 
 ```{lang=JavaScript}
@@ -175,11 +165,31 @@ Then switch to the strict mode and execute
 x = 12 // fine!
 y = 13 // ReferenceError: y is not defined
 ```
+
 The assignment to `x` will work because in the strict mode the code will modify `globalThis.x`, defined in the global scope of the host application by the prior run of the user script in the non-strict mode.
 
 Prior to version v.&thinsp;4.2.0, the problem was solved by re-loading of the host application page via [`window.location.reload`](https://developer.mozilla.org/en-US/docs/Web/API/Location/reload) every time the "Strict Mode" control value was modified. It complicated things and became a big problem for the [protection from losing data](#heading-protection-from-losing-data) feature.
 
-Since v.&thinsp;4.2.0, the host application context is protected by registering the properties of `globalThis` before and after the execution of a user script in the non-strict mode. After the execution, the properties created by the user script are removed. For further detail, please see in `globalSet` and `changedGlobalSet` in [`evaluate`](#code-core).
+Since v.&thinsp;4.2.0, the host application context is protected by registering the properties of `globalThis` before and after the execution of a user script in the non-strict mode. After the execution, the properties created by the user script are removed:
+
+```{lang=JavaScript}
+const hostApplicationContextCleanup = (() =&gt; {
+    const globalSet = new Set();
+    for (let property in globalThis)
+        globalSet.add(property);
+    return () =&gt; {
+        const currectSet = [];
+        for (let property in globalThis)
+            currectSet.push(property);
+        for (let property of currectSet)
+            if (!globalSet.has(property))
+                delete globalThis[property];
+        currectSet.splice(0);
+    };
+})();
+```
+
+Please see the use of `hostApplicationContextCleanup` in [`evaluate`](#code-core).
 
 ### Console
 
@@ -438,3 +448,5 @@ Well, at least I warned and suggest what can be used in my error message. In the
 **4.1.0**: Introduced comprehensive [user script context protection](#heading-user-script-context-protection) and [protection from losing data](#heading-protection-from-losing-data).
 
 **4.2.0**: Introduced [host context protection](#heading-host-context-protection), eliminated reloading of the host application on the modification of the "Strict Mode" control value.
+
+**4.2.1**: [Host context protection](#heading-host-context-protection) rationalized and simplified.
