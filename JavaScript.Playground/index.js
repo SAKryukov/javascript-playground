@@ -493,8 +493,8 @@ const setup = (
         } catch (exception) {
             consoleInstance.showException(exception);
         } finally { 
-            if (isStrictMode) return;
-            hostApplicationContextCleanup();
+            if (!isStrictMode)
+                hostApplicationContextCleanup();
         } //exception
     }; //evaluate
 
