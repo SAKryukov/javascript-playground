@@ -819,20 +819,19 @@ const setup = (
             if (title)
                 document.title = `${document.title}: ${title}`;
         });
+        let isCodeModified = false;
+        editor.oninput = () => { isCodeModified = true; };
         editor.focus();
+        window.addEventListener("beforeunload", function (event) { // protect from losing unsaved data
+            const requiresConfirmation = isCodeModified &&
+                (!consoleInstance.goodToQuit() || editor.value.trim().length > 0);
+            if (requiresConfirmation) { // guarantee unload prompt for all browsers:
+                event.preventDefault(); // guarantees showing confirmation dialog
+                event.returnValue = true; // show confirmation dialog
+            } else // to guarantee unconditional unload
+                delete(event.returnValue);
+        }); // protect from losing unsaved data    
     }; //document.body.onload
-
-    editor.focus();
-
-    window.addEventListener("beforeunload", function (event) { // protect from losing unsaved data
-        const requiresConfirmation =
-            (!consoleInstance.goodToQuit() || editor.value.trim().length > 0);
-        if (requiresConfirmation) { // guarantee unload prompt for all browsers:
-            event.preventDefault(); // guarantees showing confirmation dialog
-            event.returnValue = true; // show confirmation dialog
-        } else // to guarantee unconditional unload
-            delete(event.returnValue);
-    }); // protect from losing unsaved data
 
 }; //setup
 
