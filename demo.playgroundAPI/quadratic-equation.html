@@ -1,0 +1,62 @@
+<!DOCTYPE html><script src="../JavaScript.Playground/playgroundAPI.js"></script><script>
+
+const naive = (A, B, C) => {
+    if (A == 0 && B == 0 && C == 0)
+        return new anyNumber;
+    if (A == 0)
+        return -C/B;
+    const p = B/A;
+    const q = C/A;
+    const determinant = (p / 2) * (p / 2) - q;
+    if (determinant < 0) return [];
+    const second = Math.sqrt(determinant);
+    return [-p/2 - second, -p/2 + second];
+};
+
+class anyNumber extends Set {
+    static get [Symbol.species]() { return Set; }
+    get size() { return Number.POSITIVE_INFINITY; }
+    add(object) {}
+    has(element) { return element != null && element.constructor == Number; }
+};
+
+const findRoots = (A, B, C) => {
+    if (A == 0 && B == 0 && C == 0)
+        return new anyNumber;
+    if (A == 0)
+        return -C/B;
+    const p = B/A;
+    const q = C/A;
+    const determinant = (p / 2) * (p / 2) - q;
+    if (determinant < 0) return [];
+    const second = Math.sqrt(determinant);
+    const sign = p > 0 ? -1 : 1;
+    const mainRoot = -p/2 + sign * second;
+    return [mainRoot, q / mainRoot];
+};
+
+const compare = (A, B, C) => {
+    const naiveRoots = naive(A, B, C);
+    const goodRoots = findRoots(A, B, C);
+    const testTestability = roots => roots =! null && roots.constructor == Array && roots.length == 2;
+    const testZeros = zeros => {
+        let result = "";
+        for (let zero of zeros)
+            result +=  `zero: ${A * zero * zero + B * zero + C} `;
+        return result;
+    };
+    if (testTestability(naiveRoots) && testTestability(goodRoots)) {
+        console.log(testZeros(naiveRoots));
+        console.log(testZeros(goodRoots));
+    }
+}; //compare
+
+compare(3, 2, 0.01);
+
+// console.log("Naive:", naive(10, 20, 30), "Good:", findRoots(10, 20, 30));
+// console.log(findRoots(3, 2, 0.01), naive(3, 2, 0.01));
+// console.log(findRoots(0, -2, 10));
+// console.log(findRoots(0, 0, 1));
+// console.log(findRoots(0, 0, 0));
+
+</script><script>showSample("Quadratic Equation", false, true);</script>
