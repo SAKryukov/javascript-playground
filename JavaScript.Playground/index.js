@@ -131,30 +131,6 @@ const definitionSet = {
     } //if !String.empty
 })();
 
-const fileIO = {
-    storeFile: (fileName, content) => {
-        const link = document.createElement('a');
-        link.href = `data:text/plain;charset=utf-8,${content}`; //sic!
-        link.download = fileName;
-        link.click();
-    }, //storeFile
-    loadTextFile: (fileHandler, acceptFileTypes) => { // fileHandler(fileName, text), acceptFileTypes: comma-separated, in the form: ".js,.json"
-        const input = document.createElement("input");
-        input.type = "file";
-        input.accept = acceptFileTypes;
-        input.value = null;
-        if (fileHandler)
-            input.onchange = event => {
-                const file = event.target.files[0];
-                if (!file) return;
-                const reader = new FileReader();
-                reader.readAsText(file);
-                reader.onload = readEvent => fileHandler(file.name, readEvent.target.result);
-            }; //input.onchange
-        input.click();
-    }, //loadTextFile
-}; //const fileIO
-
 const setup = (
     strictModeSwitch, editor, splitter, consoleSide, console,
     downloadButton, closeButton, evaluateButton, loadButton, storeButton,
@@ -364,10 +340,6 @@ const setup = (
                 } //loop
                 return result;
             }, //toString
-            goodToQuit: function() {
-                return !this.showing ||
-                console.innerHTML.trim().length < 1;
-            }, //goodToQuit
         }; //consoleInstance
         splitter.onmousedown = ev => {
             if (ev.button != 0) return;
@@ -397,17 +369,6 @@ const setup = (
         closeButton.onclick = () => { consoleInstance.hide(); };
         return consoleInstance;
     })(); //consoleInstance
-
-    loadButton.onclick = () => { fileIO.loadTextFile((_, result) => {
-        editor.value = result;
-        }, definitionSet.textFeatures.scriptFileNameFilter);
-    }; //loadButton.onclick
-    storeButton.onclick = () => {
-        fileIO.storeFile(definitionSet.textFeatures.defaultScriptFileName, editor.value);
-    }; //storeButton.onclick
-    downloadButton.onclick = () => {
-        fileIO.storeFile(definitionSet.textFeatures.defaultOutputFileName, consoleInstance.toString());
-    }; //downloadButton.onclick
 
     const consoleApi = (() => {
         const api = {
@@ -808,6 +769,38 @@ const setup = (
             });
         } catch (ex) { consoleInstance.showException(ex); }    
     })(); //applySmartFormatting
+
+    const fileIO = {
+        storeFile: (fileName, content) => {
+            const link = document.createElement('a');
+            link.href = `data:text/plain;charset=utf-8,${content}`; //sic!
+            link.download = fileName;
+            link.click();
+        }, //storeFile
+        loadTextFile: (fileHandler, acceptFileTypes) => { // fileHandler(fileName, text), acceptFileTypes: comma-separated, in the form: ".js,.json"
+            const input = document.createElement("input");
+            input.type = "file";
+            input.accept = acceptFileTypes;
+            input.value = null;
+            if (fileHandler)
+                input.onchange = event => {
+                    const file = event.target.files[0];
+                    if (!file) return;
+                    const reader = new FileReader();
+                    reader.readAsText(file);
+                    reader.onload = readEvent =>
+                        fileHandler(file.name, readEvent.target.result);
+                }; //input.onchange
+            input.click();
+        }, //loadTextFile
+    }; //const fileIO
+        
+    storeButton.onclick = () => {
+        fileIO.storeFile(definitionSet.textFeatures.defaultScriptFileName, editor.value);
+    }; //storeButton.onclick
+    downloadButton.onclick = () => {
+        fileIO.storeFile(definitionSet.textFeatures.defaultOutputFileName, consoleInstance.toString());
+    }; //downloadButton.onclick
     
     document.body.onload = () => {
         JavaScriptPlaygroundAPI.onLoad((title, code, doNotEvaluate, strict) => {
@@ -820,11 +813,16 @@ const setup = (
                 document.title = `${document.title}: ${title}`;
         });
         let isCodeModified = false;
+        loadButton.onclick = () => { fileIO.loadTextFile((_, result) => {
+            editor.value = result;
+            isCodeModified = false;
+            }, definitionSet.textFeatures.scriptFileNameFilter);
+        }; //loadButton.onclick
         editor.oninput = () => { isCodeModified = true; };
         editor.focus();
         window.addEventListener("beforeunload", function (event) { // protect from losing unsaved data
-            const requiresConfirmation = isCodeModified &&
-                (!consoleInstance.goodToQuit() || editor.value.trim().length > 0);
+            const requiresConfirmation = isCodeModified
+                && editor.value.trim().length > 0;
             if (requiresConfirmation) { // guarantee unload prompt for all browsers:
                 event.preventDefault(); // guarantees showing confirmation dialog
                 event.returnValue = true; // show confirmation dialog
