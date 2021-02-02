@@ -1,23 +1,21 @@
 <!DOCTYPE html><script src="../JavaScript.Playground/playgroundAPI.js"></script><script>
 
 const naive = (A, B, C) => {
-    if (A == 0 && B == 0 && C == 0)
-        return new anyNumber;
     if (A == 0)
         return -C/B;
     const p = B/A;
     const q = C/A;
     const determinant = (p / 2) * (p / 2) - q;
     if (determinant < 0) return [];
-    const second = Math.sqrt(determinant);
-    return [-p/2 - second, -p/2 + second];
+    const term = Math.sqrt(determinant);
+    return [-p/2 - term, -p/2 + term];
 };
 
 class anyNumber extends Set {
     static get [Symbol.species]() { return Set; }
     get size() { return Number.POSITIVE_INFINITY; }
     add(object) {}
-    has(element) { return element != null && element.constructor == Number; }
+    has(element) {  return element != null && element.constructor == Number && !isNaN(element * 0) }
 };
 
 const findRoots = (A, B, C) => {
@@ -29,31 +27,45 @@ const findRoots = (A, B, C) => {
     const q = C/A;
     const determinant = (p / 2) * (p / 2) - q;
     if (determinant < 0) return [];
-    const second = Math.sqrt(determinant);
     const sign = p > 0 ? -1 : 1;
-    const mainRoot = -p/2 + sign * second;
+    const mainRoot = -p/2 + sign * Math.sqrt(determinant);
     return [mainRoot, q / mainRoot];
 };
 
 const compare = (A, B, C) => {
+    const naiveLabel = "Naive", goodLabel = "Good";
     const naiveRoots = naive(A, B, C);
     const goodRoots = findRoots(A, B, C);
+    console.log(`${naiveLabel} roots: ${naiveRoots}`);
+    console.log(`${goodLabel} roots: ${goodRoots}`);
     const testTestability = roots => roots =! null && roots.constructor == Array && roots.length == 2;
     const testZeros = zeros => {
-        let result = "";
+        let result = [];
         for (let zero of zeros)
-            result +=  `zero: ${A * zero * zero + B * zero + C} `;
-        return result;
+            result.push(A * zero * zero + B * zero + C);
+        return `zeroes: ${result}`;
     };
     if (testTestability(naiveRoots) && testTestability(goodRoots)) {
-        console.log(testZeros(naiveRoots));
-        console.log(testZeros(goodRoots));
+        console.log(naiveLabel, testZeros(naiveRoots));
+        console.log(goodLabel, testZeros(goodRoots));
     }
+    writeLine();
 }; //compare
 
-compare(3, 2, 0.01);
+// compare(1, 6, 0.0001); // demonstrates better accuracy
+compare(5, 3, - 2); // demonstrates better accuracy
+compare(5, - 3, - 2); // demonstrates better accuracy
+compare(19, 15, - 34); // demonstrates better accuracy
+console.log(-15/19);
+compare(1, -4, 3);
+compare(1 / 2, - 3, 1); // demonstrates better accuracy
+compare(1, -6, 9); // equal
+compare(2, -14, 12); // equal
+compare(2, -1, -15); // equal
+compare(9, - 6, 1); // equal
+compare(3, -1, 2); // none
 
-// console.log("Naive:", naive(10, 20, 30), "Good:", findRoots(10, 20, 30));
+//console.log("Naive:", naive(30, 20, 1), "Good:", findRoots(10, 20, 30));
 // console.log(findRoots(3, 2, 0.01), naive(3, 2, 0.01));
 // console.log(findRoots(0, -2, 10));
 // console.log(findRoots(0, 0, 1));
