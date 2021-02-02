@@ -321,21 +321,27 @@ You can consider this as a method of "converting all errors into exceptions". Al
 
 ### Protection from Losing Data
 
-This feature is trivial, but I want to describe it, due to the ababdance of recipies working or not working for different browsers. To best of my knowledge, I put together the techniques to cover most browser peculiarities.
+This feature is trivial, but I want to describe it, due to the abundance of recipes working or not working for different browsers. To the best of my knowledge, I put together the techniques to cover most browser peculiarities.
 
-The user can easily unintentionally reload the page or remove it by closing its tab or window. If a user has some potentially valuable code in the `edit` control or data in console, the user confirmation is required. This is how to achieve it:
+The user can easily unintentionally reload the page or remove it by closing its tab or window. If a user has some potentially valuable code in the code editor control, user confirmation is required. This is how to achieve it:
 
 ```{lang=JavaScript}{id=code-unload-protection}
-window.addEventListener('beforeunload', function (event) { // sic!
-    const requiresConfirmation =
-        (!consoleInstance.goodToQuit() || editor.value.trim().length > 0);
+window.addEventListener('beforeunload', event =&gt; { // sic!
+    const requiresConfirmation = isCodeModified
+        && editor.value.trim().length > 0;
     if (requiresConfirmation) {
         event.preventDefault(); // guarantees showing confirmation dialog
         event.returnValue = true; // show confirmation dialog
     } else // to guarantee unconditional unload
         delete(event.returnValue);
-});
 ```
+The status `isCodeModified` is updated by the `input` event of the code editor control:
+
+```{lang=JavaScript}{id=code-set-modified}
+editor.oninput = () => isCodeModified = true;
+```
+
+This status is cleared when the code is loaded from the file or supplied via the [Playground API](#heading-playground-api).
 
 Not all lines of this code are absolutely required: deletion of `event.returnValue` could be replaced with the assignment to `undefined`, and `event.preventDefault()` might be redundant. However, there can be chances that in certain situations for certain browsers these lines will be essential. See [this documentation page](https://developer.mozilla.org/en-US/docs/Web/API/WindowEventHandlers/onbeforeunload) for more detail.
 
@@ -446,4 +452,4 @@ Well, at least I warned and suggest what can be used in my error message. In the
 
 **4.2.0**: Introduced [host context protection](#heading-host-context-protection), eliminated reloading of the host application on the modification of the "Strict Mode" control value.
 
-**4.2.1**: [Host context protection](#heading-host-context-protection) rationalized and simplified.
+**4.3.0**: [Host context protection](#heading-host-context-protection) rationalized and simplified, developed control of the script modified status.
