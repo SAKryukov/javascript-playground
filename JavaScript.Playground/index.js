@@ -818,7 +818,7 @@ const setup = (
             isCodeModified = false;
             }, definitionSet.textFeatures.scriptFileNameFilter);
         }; //loadButton.onclick
-        editor.oninput = () => { isCodeModified = true; };
+        editor.oninput = () => isCodeModified = true;
         editor.focus();
         window.addEventListener("beforeunload", event => { // protect from losing unsaved data
             const requiresConfirmation = isCodeModified
