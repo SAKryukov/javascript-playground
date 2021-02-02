@@ -820,7 +820,7 @@ const setup = (
         }; //loadButton.onclick
         editor.oninput = () => { isCodeModified = true; };
         editor.focus();
-        window.addEventListener("beforeunload", function (event) { // protect from losing unsaved data
+        window.addEventListener("beforeunload", event => { // protect from losing unsaved data
             const requiresConfirmation = isCodeModified
                 && editor.value.trim().length > 0;
             if (requiresConfirmation) { // guarantee unload prompt for all browsers:
