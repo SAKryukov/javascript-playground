@@ -452,4 +452,4 @@ Well, at least I warned and suggest what can be used in my error message. In the
 
 **4.2.0**: Introduced [host context protection](#heading-host-context-protection), eliminated reloading of the host application on the modification of the "Strict Mode" control value.
 
-**4.3.0**: [Host context protection](#heading-host-context-protection) rationalized and simplified, developed control of the script modified status.
+**4.3.0**: Many fixes and improvements.
