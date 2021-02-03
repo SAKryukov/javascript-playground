@@ -1,8 +1,5 @@
 ﻿<!DOCTYPE html><script src="../JavaScript.Playground/playgroundAPI.js"></script><script>
 
-console.info("Solve the equation: Ax² + Bx + C = 0");
-writeLine();
-
 const naiveSolution = (A, B, C) => {
     if (A == 0)
         return -C/B;
@@ -32,35 +29,56 @@ const solution = (A, B, C) => {
     if (determinant < 0) return [];
     const sign = p > 0 ? -1 : 1;
     const mainRoot = -p/2 + sign * Math.sqrt(determinant);
-    return [mainRoot, q / mainRoot];
+    return [mainRoot, q / mainRoot]; // another root by Vieta's formula
 };
 
-/////// tests, demo: //////////////////////////////////
+"════════════════════════════ tests, demo: ════════════════════════════";
 
-const show = (A, B, C, taskOnly) => {
+console.info("Solve the equation: Ax² + Bx + C = 0");
+writeLine();
+
+const formatEquation = (A, B, C) => {
     const signA = A >= 0 ? "" : "−";
     const signB = B >= 0 ? "+" : "−";
     const signC = C >=0 ? "+" : "−";
-    console.log(`${signA}${Math.abs(A)}x² ${signB} ${Math.abs(B)}x ${signC} ${Math.abs(C)} = 0, solution: `);
-    if (taskOnly) return;
+    return `${signA}${Math.abs(A)}x² ${signB} ${Math.abs(B)}x ${signC} ${Math.abs(C)} = 0`;
+}
+
+const show = (A, B, C) => {
+    console.dir(`${formatEquation(A, B, C)}`);
     console.log(solution(A, B, C));
     writeLine();
 }
-show(5, 3, - 2);
 
-show(1, 2, 0);
-console.log(solution(0, 2, - 4));
-console.log(solution(0, 0, 32));
-console.log(solution(0, 0, -4));
+show(5, 3, -2);
+show(2, -8, 6);
+show(3, -4, 2); // none
+show(2, 4, 2); // equal roots
+show(9, -6, 1); // equal roots
+
+console.info("Reduced:");
+writeLine();
+show(3, 6, 0);
+show(0, 2, -4);
+show(0, 0, 32);
+show(0, 0, -4);
+
+console.info(formatEquation(0, 0, 0), "equation :");
+writeLine();
+
 const any = solution(0, 0, 0);
 console.log(`solution(0, 0, 0): anyNumber = ${solution(0, 0, 0)}, size: ${solution(0, 0, 0).size}`);
 console.log(`Any number has 1 = ${any.has(1)}`);
 console.log(`Any number has Inf = ${any.has(Number.POSITIVE_INFINITY)}`);
 console.log(`Any number has NaN = ${any.has(Number.NaN)}`);
 console.log(`Any number has "abc" = ${any.has("abc")}`);
+writeLine();
+
+console.info("Better accuracy:");
+writeLine();
 
 const compare = (A, B, C, comment) => {
-    show(A, B, C, true);
+    console.dir(formatEquation(A, B, C));
     if (comment) console.log(`${comment}:`);
     const naiveLabel = "Naive", goodLabel = "Good";
     const naiveRoots = naiveSolution(A, B, C);
@@ -72,7 +90,7 @@ const compare = (A, B, C, comment) => {
         let result = [];
         for (let zero of zeros)
             result.push(A * zero * zero + B * zero + C);
-        return `zeroes: ${result}`;
+        return `zeros: ${result}`;
     };
     if (testTestability(naiveRoots) && testTestability(goodRoots)) {
         console.log(naiveLabel, testZeros(naiveRoots));
@@ -81,18 +99,7 @@ const compare = (A, B, C, comment) => {
     writeLine();
 }; //compare
 
-writeLine();
-
-compare(1, 6, 0.0001, "Better accuracy"); // demonstrates better accuracy
 compare(5, 3, - 2); // demonstrates better accuracy
-compare(5, - 3, - 2); // demonstrates better accuracy
-compare(1, -4, 3);
 compare(1 / 2, - 3, 1); // demonstrates better accuracy
-compare(1, -6, 9); // equal
-compare(2, -14, 12); // equal
-compare(2, -1, -15);
-compare(8, -6, 1);
-compare(9, -6, 1); // equal
-compare(3, - 1, 2); // none
 
 </script><script>showSample("Quadratic Equation", false, true);</script>
