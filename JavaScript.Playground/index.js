@@ -90,6 +90,8 @@ const definitionSet = {
                 { before: [String.fromCharCode(3)], after: "**" }, //restore
             ],
             tidyVerbatim: [ // inside these brackets, tidy is not applied, the content is used verbatim
+                { bra: "/*", ket: "*/" },
+                { bra: "//", ket: null },
                 { bra: "'", ket: "'" },
                 { bra: "`", ket: "`" },
                 { bra: "\"", ket: "\"" }
@@ -539,9 +541,10 @@ const setup = (
             for (let rule in rules) {
                 if (regex)
                     regex += "|";
-                regex += escape(rules[rule].bra) + ".*?" + escape(rules[rule].ket);
+                const bra = rules[rule].bra == null ? "^" : escape(rules[rule].bra);
+                const ket = rules[rule].ket == null ? "$" : escape(rules[rule].ket);
+                regex += `${bra}.*?${ket}`;
             } //loop
-            regex = "(" + regex + ")";
             return new RegExp(regex, "g");
         })(options.formattingRules.tidyVerbatim); //createTidyVerbatimRegex
         const getCursor = editor => editor.selectionStart;
@@ -612,15 +615,30 @@ const setup = (
             return source.substr(0, result);
         } //countTabs	
         const tidy = value => {
-            let preserveQuotationMatchBefore = value.match(tidyVerbatimRegex);
-            for (let index in tidyRegex)
-                value = value.replace(tidyRegex[index].before, tidyRegex[index].after);
-            value = value.replace(/\s+/g, constants.blankSpace);
-            if (preserveQuotationMatchBefore) {
-                let preserveQuotationMatchAfter = value.match(tidyVerbatimRegex);
-                if (preserveQuotationMatchAfter)
-                    for (let index=0; index < preserveQuotationMatchAfter.length; ++index)
-                        value = value.replace(preserveQuotationMatchAfter[index], preserveQuotationMatchBefore[index]);
+            const toTidy = value.split(tidyVerbatimRegex);
+            if (toTidy.length > 1) {
+                const formatted = [];
+                for (let term of toTidy) {
+                    for (let index in tidyRegex)
+                        term = term.replace(tidyRegex[index].before, tidyRegex[index].after);
+                    term = term.replace(/\s+/g, constants.blankSpace);
+                    formatted.push(term);
+                } //loop
+                let match;
+                const matches = [];
+                    while ((match = tidyVerbatimRegex.exec(value)) !== null) 
+                    matches.push(match);
+                const result = [];
+                for (let current = 0; current < formatted.length; ++current) {
+                    result.push(formatted[current]);
+                    if (matches[current])
+                        result.push(matches[current]);
+                } //loop
+                value = result.join("");
+            } else {
+                for (let index in tidyRegex)
+                    value = value.replace(tidyRegex[index].before, tidyRegex[index].after);
+                value = value.replace(/\s+/g, constants.blankSpace);
             } //if
             return value.trim();
         } //tidy
