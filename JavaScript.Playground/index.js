@@ -703,6 +703,8 @@ const setup = (
                 setCursor(this, context.cursor - context.left.line.length)
                 insert(tidyLine); setCursor(this, context.cursor + cursorShift);
                 context = parseCursorContext(this);
+                if (context.cursor + cursorShift >= editor.value.length)
+                    setTimeout( () => editor.scrollTop = editor.scrollHeight );
             } //if useTidy
             if (options.features.useSmartIndent) {
                 for (let index = 0; index < options.formattingRules.indent.length; ++index) {
