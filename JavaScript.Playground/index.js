@@ -106,6 +106,8 @@ const definitionSet = {
                 { pattern: "thr*ow new |;", breakPoint: "*", insertPoint: "|" },
                 { pattern: "if* (|)", breakPoint: "*", insertPoint: "|" },
                 { pattern: "els*e |", breakPoint: "*", insertPoint: "|" },
+                { pattern: "le*t |", breakPoint: "*", insertPoint: "|" },
+                { pattern: "con*st |", breakPoint: "*", insertPoint: "|" },
                 { pattern: "conso*le.|", breakPoint: "*", insertPoint: "|" },
                 { pattern: "console.l*og(|);", breakPoint: "*", insertPoint: "|" },
                 { pattern: "console.e*rror(|);", breakPoint: "*", insertPoint: "|" },
@@ -546,7 +548,7 @@ const setup = (
                 regex += `${bra}.*?${ket}`;
             } //loop
             return new RegExp(regex, "g");
-        })(options.formattingRules.tidyVerbatim); //createTidyVerbatimRegex
+        })(options.formattingRules.tidyVerbatim);
         const getCursor = editor => editor.selectionStart;
         const setCursor = (editor, pos) => {
             editor.selectionStart = pos;
@@ -613,7 +615,7 @@ const setup = (
                 else
                     break;
             return source.substr(0, result);
-        } //countTabs	
+        } //countTabs
         const tidy = value => {
             const toTidy = value.split(tidyVerbatimRegex);
             if (toTidy.length > 1) {
