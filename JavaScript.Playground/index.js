@@ -91,6 +91,7 @@ const definitionSet = {
             ],
             tidyVerbatim: [ // inside these brackets, tidy is not applied, the content is used verbatim
                 { bra: "'", ket: "'" },
+                { bra: "`", ket: "`" },
                 { bra: "\"", ket: "\"" }
             ],
             autoComplete: [
