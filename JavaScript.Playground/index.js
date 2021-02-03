@@ -529,7 +529,7 @@ const setup = (
             return regex;
         })(options.formattingRules.tidy); //createRegexTidyRules
         const tidyVerbatimRegex = (function createTidyVerbatimRegex(rules) {
-            const escape = function(value) {
+            const escape = value => {
                 let word = constants.empty;
                 for (let charIndex in value)
                     word += "\\" + value[charIndex];
@@ -594,14 +594,14 @@ const setup = (
                 + aValue
                 + editor.value.substring(endPos, editor.value.length);
         } //insert
-        const removeBack = function (cursorContext, count) {
+        const removeBack = (cursorContext, count) => {
             if (!count) return;
             let left = editor.value.substring(0, cursorContext.cursor);
             let right = editor.value.substring(cursorContext.cursor);
             left = left.slice(0, -count);
             editor.value = left + right;
         } //removeBack
-        const countTabs = function (source) {
+        const countTabs = source => {
             let match = (options.features.useTabs) ? constants.tab : constants.blankSpace;
             let result = 0;
             for (let index = 0; index < source.length; ++index)
@@ -611,7 +611,7 @@ const setup = (
                     break;
             return source.substr(0, result);
         } //countTabs	
-        function tidy(value) {
+        const tidy = value => {
             let preserveQuotationMatchBefore = value.match(tidyVerbatimRegex);
             for (let index in tidyRegex)
                 value = value.replace(tidyRegex[index].before, tidyRegex[index].after);
@@ -637,7 +637,7 @@ const setup = (
                 return true;
             } //loop
         } //handleCharacter
-        function recognizeAutocomplete(context) {
+        const recognizeAutocomplete = context => {
             if (!context) return;
             if (context.right.line) return;
             for (let index = 0; index < options.formattingRules.autoComplete.length; ++index) {
