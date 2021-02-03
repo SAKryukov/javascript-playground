@@ -1,6 +1,9 @@
-<!DOCTYPE html><script src="../JavaScript.Playground/playgroundAPI.js"></script><script>
+﻿<!DOCTYPE html><script src="../JavaScript.Playground/playgroundAPI.js"></script><script>
 
-const naive = (A, B, C) => {
+console.info("Solve the equation: Ax² + Bx + C = 0");
+writeLine();
+
+const naiveSolution = (A, B, C) => {
     if (A == 0)
         return -C/B;
     const p = B/A;
@@ -15,10 +18,10 @@ class anyNumber extends Set {
     static get [Symbol.species]() { return Set; }
     get size() { return Number.POSITIVE_INFINITY; }
     add(object) {}
-    has(element) {  return element != null && element.constructor == Number && !isNaN(element * 0) }
+    has(element) {  return element != null && element.constructor == Number && !isNaN(element * 0); }
 };
 
-const findRoots = (A, B, C) => {
+const solution = (A, B, C) => {
     if (A == 0 && B == 0 && C == 0)
         return new anyNumber;
     if (A == 0)
@@ -32,10 +35,36 @@ const findRoots = (A, B, C) => {
     return [mainRoot, q / mainRoot];
 };
 
-const compare = (A, B, C) => {
+/////// tests, demo: //////////////////////////////////
+
+const show = (A, B, C, taskOnly) => {
+    const signA = A >= 0 ? "" : "−";
+    const signB = B >= 0 ? "+" : "−";
+    const signC = C >=0 ? "+" : "−";
+    console.log(`${signA}${Math.abs(A)}x² ${signB} ${Math.abs(B)}x ${signC} ${Math.abs(C)} = 0, solution: `);
+    if (taskOnly) return;
+    console.log(solution(A, B, C));
+    writeLine();
+}
+show(5, 3, - 2);
+
+show(1, 2, 0);
+console.log(solution(0, 2, - 4));
+console.log(solution(0, 0, 32));
+console.log(solution(0, 0, -4));
+const any = solution(0, 0, 0);
+console.log(`solution(0, 0, 0): anyNumber = ${solution(0, 0, 0)}, size: ${solution(0, 0, 0).size}`);
+console.log(`Any number has 1 = ${any.has(1)}`);
+console.log(`Any number has Inf = ${any.has(Number.POSITIVE_INFINITY)}`);
+console.log(`Any number has NaN = ${any.has(Number.NaN)}`);
+console.log(`Any number has "abc" = ${any.has("abc")}`);
+
+const compare = (A, B, C, comment) => {
+    show(A, B, C, true);
+    if (comment) console.log(`${comment}:`);
     const naiveLabel = "Naive", goodLabel = "Good";
-    const naiveRoots = naive(A, B, C);
-    const goodRoots = findRoots(A, B, C);
+    const naiveRoots = naiveSolution(A, B, C);
+    const goodRoots = solution(A, B, C);
     console.log(`${naiveLabel} roots: ${naiveRoots}`);
     console.log(`${goodLabel} roots: ${goodRoots}`);
     const testTestability = roots => roots =! null && roots.constructor == Array && roots.length == 2;
@@ -52,23 +81,18 @@ const compare = (A, B, C) => {
     writeLine();
 }; //compare
 
-// compare(1, 6, 0.0001); // demonstrates better accuracy
+writeLine();
+
+compare(1, 6, 0.0001, "Better accuracy"); // demonstrates better accuracy
 compare(5, 3, - 2); // demonstrates better accuracy
 compare(5, - 3, - 2); // demonstrates better accuracy
-compare(19, 15, - 34); // demonstrates better accuracy
-console.log(-15/19);
 compare(1, -4, 3);
 compare(1 / 2, - 3, 1); // demonstrates better accuracy
 compare(1, -6, 9); // equal
 compare(2, -14, 12); // equal
-compare(2, -1, -15); // equal
-compare(9, - 6, 1); // equal
-compare(3, -1, 2); // none
-
-//console.log("Naive:", naive(30, 20, 1), "Good:", findRoots(10, 20, 30));
-// console.log(findRoots(3, 2, 0.01), naive(3, 2, 0.01));
-// console.log(findRoots(0, -2, 10));
-// console.log(findRoots(0, 0, 1));
-// console.log(findRoots(0, 0, 0));
+compare(2, -1, -15);
+compare(8, -6, 1);
+compare(9, -6, 1); // equal
+compare(3, - 1, 2); // none
 
 </script><script>showSample("Quadratic Equation", false, true);</script>
