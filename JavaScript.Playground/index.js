@@ -14,6 +14,11 @@ https://www.codeproject.com/Articles/5291705/JavaScript-Playground
 
 "use strict";
 
+window.addEventListener('load', () => {
+    if (navigator.serviceWorker)
+      navigator.serviceWorker .register('./pwa-service-worker.js');
+});
+  
 const definitionSet = {
     keys: {
         evaluate: "F2",

@@ -2,18 +2,11 @@
     "version": "0.2.0",
     "configurations": [
         {
-            "type": "chrome",
+            "name": "Life",
             "request": "launch",
-            "name": "Chrome SoundBuilder",
-            "runtimeArgs": ["--incognito"],
-            "file":"${workspaceFolder}/index.html"
-        },
-        {
-            "type": "edge",
-            "request": "launch",
-            "name": "Edge, index.htm",
-            "runtimeArgs": ["--incognito"],
-            "file":"${workspaceFolder}/index.html"
+            "type": "pwa-chrome",
+            "url": "https://localhost:8080",
+            "webRoot": "${workspaceFolder}"
         }
     ]
 }
