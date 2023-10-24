@@ -2,7 +2,7 @@
 
 JavaScript Playground
 
-Copyright (c) 2015, 2019-2021 by Sergey A Kryukov
+Copyright (c) 2015, 2019-2023 by Sergey A Kryukov
 http://www.SAKryukov.org
 http://SAKryukov.org/freeware/calculator
 http://www.codeproject.com/Members/SAKryukov
@@ -14,8 +14,8 @@ https://www.codeproject.com/Articles/5291705/JavaScript-Playground
 
 const metadata = (() => {
     return {
-        copyright: "2015, 2019-2021 by S A Kryukov",
-        fullVersion: "4.3.0",
+        copyright: "2015, 2019-2022 by S A Kryukov",
+        fullVersion: "5.0.0",
         title: document.title,
         version: function(memberCount) {
            if (!memberCount) return this.fullVersion;
