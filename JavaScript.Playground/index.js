@@ -21,18 +21,16 @@ const setReadonly = target => {
 
 window.onload = () => {
 
-/*
     if (navigator.serviceWorker) {
         navigator.serviceWorker
             .register("pwa-service-worker.js")
-            .then((registration) => {
+            .then(() => {
                 console.log("registered");
             })
             .catch((error)=>{
                 console.log(error);
             });
     }
-*/
 
     const definitionSet = {
         keys: {
