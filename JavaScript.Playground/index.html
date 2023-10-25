@@ -16,6 +16,8 @@ https://www.codeproject.com/Articles/5291705/JavaScript-Playground
 <head>
   <meta charset="utf-8"/>
   <title>JavaScript Playground</title>
+  <script src="playgroundAPI.js"></script>
+  <script src="index.js"></script>
   <link rel="manifest" href="./manifest.json">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <link rel="icon" type="image/svg+xml" href="./images/JavaScript-Playground.svg">
@@ -125,28 +127,6 @@ https://www.codeproject.com/Articles/5291705/JavaScript-Playground
     </section>
     <p><span></span><span></span></p>
   </footer>
-
-  <script src="playgroundAPI.js"></script>
-  <script src="index.js"></script>
-  <script>
-    const strictModeSwitch = document.getElementById("strict-mode")
-    const editor = document.getElementById("editor");
-    const splitter = document.getElementById("splitter");
-    const consoleSide = document.querySelector("aside");
-    const console = document.getElementById("console");
-    const downloadButton = document.querySelector("aside > section > svg:first-child");
-    const closeButton = document.querySelector("aside > section > svg:last-child");
-    const productElement = document.querySelector("footer > p > span:first-child");
-    const copyrightElement = document.querySelector("footer > p > span:last-child");
-    const evaluateButton = document.querySelector("button");
-    const evaluateResult = document.getElementById("resultCell"); 
-    const positionIndicator = document.getElementById("statusCell");
-    const loadButton = document.querySelector("footer > section > button:nth-of-type(2)");
-    const storeButton = document.querySelector("footer > section > button:last-of-type");
-    setup(strictModeSwitch, editor, splitter, consoleSide, console,
-    downloadButton, closeButton, evaluateButton, loadButton, storeButton,
-    evaluateResult, positionIndicator, productElement, copyrightElement);
-  </script>
 
 </body>
 </html>

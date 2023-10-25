@@ -7,6 +7,12 @@
             "type": "pwa-chrome",
             "url": "https://localhost:8080",
             "webRoot": "${workspaceFolder}"
+        },
+        {
+            "name": "File",
+            "request": "launch",
+            "type": "pwa-chrome",
+            "file": "${workspaceFolder}/index.html"
         }
     ]
 }

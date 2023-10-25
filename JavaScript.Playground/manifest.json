@@ -2,7 +2,7 @@
   "name": "JavaScript Playground",
   "short_name": "JavaScriptPlayground",
   "description": "JavaScript Playground, calculator and demo tool",
-  "start_url": "./index.html",
+  "start_url": "./",
   "display": "standalone",
   "theme_color": "bisque",
   "background_color": "aliceblue",
