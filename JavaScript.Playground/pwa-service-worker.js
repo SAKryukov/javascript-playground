@@ -9,7 +9,9 @@ const initialCachedResources = [
     "/images/JavaScript-Playground.svg",
     "/help.html",
     "/index.html",
+    "/index.js",
     "/playgroundAPI.js",
+    "/pwa-service-worker.js",
 ];
 
 self.addEventListener('install', function(e) {
