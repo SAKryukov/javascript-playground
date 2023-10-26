@@ -21,17 +21,10 @@ const setReadonly = target => {
 
 window.onload = () => {
 
-    if (navigator.serviceWorker) {
-        navigator.serviceWorker
-            .register("pwa-service-worker.js")
-            .then(() => {
-                console.log("registered");
-            })
-            .catch((error)=>{
-                console.log(error);
-            });
-    }
-
+    //if (navigator.serviceWorker)
+    //    navigator.serviceWorker
+    //        .register("pwa-service-worker.js");
+    
     const definitionSet = {
         keys: {
             evaluate: "F2",
@@ -69,9 +62,10 @@ window.onload = () => {
             timer: "font-weight: bold; font-size: 110%",
         },
         textFeatures: {
-            defaultOutputFileName: "JavaScriptPlayground.output.txt",
-            defaultScriptFileName: "JavaScriptPlayground.script.js",
-            scriptFileNameFilter: ".js",
+            consoleFileDescription: "Text file", 
+            scriptFileDescription: "JavaScript File",
+            consoleAccept: { "text/plain": [".txt"] }, 
+            scriptAccept: { "application/ecmascript": [".js"] },
             newLine: "\n",
             indentPad: "\t",
             blankSpace: " ",
@@ -491,7 +485,7 @@ window.onload = () => {
                 case definitionSet.keys.download: if (event.ctrlKey) {
                     if (!consoleInstance.showing) return;
                     event.preventDefault();
-                    return fileIO.storeFile(definitionSet.textFeatures.defaultOutputFileName, consoleInstance.toString());
+                    return fileIO.storeFile(consoleInstance.toString(), true);
                 } //if download
             } //switch
         } //document.onkeydown
@@ -811,36 +805,64 @@ window.onload = () => {
             } catch (ex) { consoleInstance.showException(ex); }
         })(); //applySmartFormatting
 
+        let scriptFileHandle = null, consoleFileHandle = null;
         const fileIO = {
-            storeFile: (fileName, content) => {
-                const link = document.createElement('a');
-                link.href = `data:text/plain;charset=utf-8,${content}`; //sic!
-                link.download = fileName;
-                link.click();
+            storeFile: async (content, isConsole) => {
+                let workingFileHandle = isConsole ? consoleFileHandle : scriptFileHandle;
+                const opts = {
+                    types: [
+                      {
+                        description: isConsole
+                            ? definitionSet.textFeatures.consoleFileDescription
+                            : definitionSet.textFeatures.scriptFileDescription,
+                        accept: isConsole
+                            ? definitionSet.textFeatures.consoleAccept
+                            : definitionSet.textFeatures.scriptAccept,
+                      },
+                    ],
+                    suggestedName: workingFileHandle == null
+                    ? undefined
+                    : workingFileHandle.name,
+                    startIn: workingFileHandle == null
+                    ? undefined
+                    : workingFileHandle,
+                    id : isConsole.toString(),
+                }; //opts
+                if (isConsole)
+                    consoleFileHandle = await window.showSaveFilePicker(opts);
+                else
+                    scriptFileHandle = await window.showSaveFilePicker(opts);
+                workingFileHandle = isConsole ? consoleFileHandle : scriptFileHandle;
+                const writableStream = await workingFileHandle.createWritable();
+                await writableStream.write(content);
+                await writableStream.close();
             }, //storeFile
-            loadTextFile: (fileHandler, acceptFileTypes) => { // fileHandler(fileName, text), acceptFileTypes: comma-separated, in the form: ".js,.json"
-                const input = document.createElement("input");
-                input.type = "file";
-                input.accept = acceptFileTypes;
-                input.value = null;
-                if (fileHandler)
-                    input.onchange = event => {
-                        const file = event.target.files[0];
-                        if (!file) return;
-                        const reader = new FileReader();
-                        reader.readAsText(file);
-                        reader.onload = readEvent =>
-                            fileHandler(file.name, readEvent.target.result);
-                    }; //input.onchange
-                input.click();
+            loadTextFile: async (fileHandler, description, accept) => { // fileHandler(fileName, text),
+                if (!fileHandler) return;
+                const opts = {
+                    types: [
+                      {
+                        description: description,
+                        accept: accept,
+                      },
+                    ],
+                    startIn: scriptFileHandle == null
+                        ? undefined
+                        : scriptFileHandle,
+                    id : false.toString(),
+                }; //opts
+                [scriptFileHandle] = await window.showOpenFilePicker(opts);
+                const file = await scriptFileHandle.getFile();
+                const text = await file.text();
+                fileHandler(scriptFileHandle.name, text);
             }, //loadTextFile
         }; //const fileIO
 
-        storeButton.onclick = () => {
-            fileIO.storeFile(definitionSet.textFeatures.defaultScriptFileName, editor.value);
+        storeButton.onclick = async () => {
+            await fileIO.storeFile(editor.value, false);
         }; //storeButton.onclick
-        downloadButton.onclick = () => {
-            fileIO.storeFile(definitionSet.textFeatures.defaultOutputFileName, consoleInstance.toString());
+        downloadButton.onclick = async () => {
+            await fileIO.storeFile(consoleInstance.toString(), true);
         }; //downloadButton.onclick
 
         JavaScriptPlaygroundAPI.onLoad((title, code, doNotEvaluate, strict) => {
@@ -853,11 +875,13 @@ window.onload = () => {
                 document.title = `${document.title}: ${title}`;
         });
         let isCodeModified = false;
-        loadButton.onclick = () => {
-            fileIO.loadTextFile((_, result) => {
+        loadButton.onclick = async () => {
+            await fileIO.loadTextFile((_, result) => {
                 editor.value = result;
                 isCodeModified = false;
-            }, definitionSet.textFeatures.scriptFileNameFilter);
+            }, 
+            definitionSet.textFeatures.scriptFileDescription,
+            definitionSet.textFeatures.scriptAccept);
         }; //loadButton.onclick
         editor.oninput = () => isCodeModified = true;
         editor.focus();
@@ -910,22 +934,24 @@ window.onload = () => {
             `${safeGlobals}; with (Math) \{${text}\n\}`;
     }; //safeInput
 
-    const strictModeSwitch = document.getElementById("strict-mode")
-    const editor = document.getElementById("editor");
-    const splitter = document.getElementById("splitter");
-    const consoleSide = document.querySelector("aside");
-    const consoleElement = document.getElementById("console");
-    const downloadButton = document.querySelector("aside > section > svg:first-child");
-    const closeButton = document.querySelector("aside > section > svg:last-child");
-    const productElement = document.querySelector("footer > p > span:first-child");
-    const copyrightElement = document.querySelector("footer > p > span:last-child");
-    const evaluateButton = document.querySelector("button");
-    const evaluateResult = document.getElementById("resultCell");
-    const positionIndicator = document.getElementById("statusCell");
-    const loadButton = document.querySelector("footer > section > button:nth-of-type(2)");
-    const storeButton = document.querySelector("footer > section > button:last-of-type");
-    setup(strictModeSwitch, editor, splitter, consoleSide, consoleElement,
-        downloadButton, closeButton, evaluateButton, loadButton, storeButton,
-        evaluateResult, positionIndicator, productElement, copyrightElement);
+    (() => { // setup
+        const strictModeSwitch = document.getElementById("strict-mode")
+        const editor = document.getElementById("editor");
+        const splitter = document.getElementById("splitter");
+        const consoleSide = document.querySelector("aside");
+        const consoleElement = document.getElementById("console");
+        const downloadButton = document.querySelector("aside > section > svg:first-child");
+        const closeButton = document.querySelector("aside > section > svg:last-child");
+        const productElement = document.querySelector("footer > p > span:first-child");
+        const copyrightElement = document.querySelector("footer > p > span:last-child");
+        const evaluateButton = document.querySelector("button");
+        const evaluateResult = document.getElementById("resultCell");
+        const positionIndicator = document.getElementById("statusCell");
+        const loadButton = document.querySelector("footer > section > button:nth-of-type(2)");
+        const storeButton = document.querySelector("footer > section > button:last-of-type");
+        setup(strictModeSwitch, editor, splitter, consoleSide, consoleElement,
+            downloadButton, closeButton, evaluateButton, loadButton, storeButton,
+            evaluateResult, positionIndicator, productElement, copyrightElement);    
+    })();
 
 };
