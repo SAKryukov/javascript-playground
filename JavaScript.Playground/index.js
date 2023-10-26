@@ -21,9 +21,9 @@ const setReadonly = target => {
 
 window.onload = () => {
 
-    //if (navigator.serviceWorker)
-    //    navigator.serviceWorker
-    //        .register("pwa-service-worker.js");
+    if (navigator.serviceWorker)
+        navigator.serviceWorker
+            .register("pwa-service-worker.js");
     
     const definitionSet = {
         keys: {
@@ -150,9 +150,14 @@ window.onload = () => {
 
     const setup = (
         strictModeSwitch, editor, splitter, consoleSide, console,
-        downloadButton, closeButton, evaluateButton, loadButton, storeButton,
+        downloadButton, closeButton, evaluateButton, loadButton, storeButton, installButton,
         evaluateResult, positionIndicator,
         product, copyright) => {
+        
+        window.onbeforeinstallprompt = event => {
+            installButton.style.display = "block";
+            installButton.onclick = () => event.prompt();
+        } //window.onbeforeinstallprompt
 
         product.innerHTML = `${metadata.title} ${metadata.version()}`;
         copyright.innerHTML = `Copyright &copy; ${metadata.copyright}`;
@@ -948,9 +953,10 @@ window.onload = () => {
         const evaluateResult = document.getElementById("resultCell");
         const positionIndicator = document.getElementById("statusCell");
         const loadButton = document.querySelector("footer > section > button:nth-of-type(2)");
-        const storeButton = document.querySelector("footer > section > button:last-of-type");
+        const storeButton = document.querySelector("footer > section > button:nth-of-type(3)");
+        const installButton = document.querySelector("footer > section > button:last-of-type");
         setup(strictModeSwitch, editor, splitter, consoleSide, consoleElement,
-            downloadButton, closeButton, evaluateButton, loadButton, storeButton,
+            downloadButton, closeButton, evaluateButton, loadButton, storeButton, installButton,
             evaluateResult, positionIndicator, productElement, copyrightElement);    
     })();
 
