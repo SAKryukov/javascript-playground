@@ -158,6 +158,9 @@ window.onload = () => {
             installButton.style.display = "block";
             installButton.onclick = () => event.prompt();
         } //window.onbeforeinstallprompt
+        window.onappinstalled = () => {
+            installButton.style.display = "none";
+        } //window.onappinstalled
 
         product.innerHTML = `${metadata.title} ${metadata.version()}`;
         copyright.innerHTML = `Copyright &copy; ${metadata.copyright}`;
