@@ -895,7 +895,7 @@ window.onload = () => {
                     }; //input.onchange
                 input.click();                
             }; //loadTextFileFallback
-                return (window.showOpenFilePicker && window.showSaveFilePicker)
+                return window.showOpenFilePicker && window.showSaveFilePicker
                     ? { storeFile: storeFile, loadTextFile: loadTextFile }
                     : { storeFile: storeFileFallback, loadTextFile: loadTextFileFallback };
         })(); //fileIO
