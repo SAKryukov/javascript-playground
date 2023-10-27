@@ -66,6 +66,8 @@ window.onload = () => {
             scriptFileDescription: "JavaScript File",
             consoleAccept: { "text/plain": [".txt"] }, 
             scriptAccept: { "application/ecmascript": [".js"] },
+            defaultOutputFileName: "JavaScriptPlayground.output.txt", // storeFileFallback
+            defaultScriptFileName: "JavaScriptPlayground.script.js", // storeFileFallback
             newLine: "\n",
             indentPad: "\t",
             blankSpace: " ",
@@ -813,9 +815,9 @@ window.onload = () => {
             } catch (ex) { consoleInstance.showException(ex); }
         })(); //applySmartFormatting
 
-        let scriptFileHandle = null, consoleFileHandle = null;
-        const fileIO = {
-            storeFile: async (content, isConsole) => {
+        const fileIO = (() => {
+            let scriptFileHandle = null, consoleFileHandle = null;
+            const storeFile = async (content, isConsole) => {
                 let workingFileHandle = isConsole ? consoleFileHandle : scriptFileHandle;
                 const opts = {
                     types: [
@@ -844,8 +846,8 @@ window.onload = () => {
                 const writableStream = await workingFileHandle.createWritable();
                 await writableStream.write(content);
                 await writableStream.close();
-            }, //storeFile
-            loadTextFile: async (fileHandler, description, accept) => { // fileHandler(fileName, text),
+            }; //storeFile
+            const loadTextFile = async (fileHandler, description, accept) => { // fileHandler(fileName, text)
                 if (!fileHandler) return;
                 const opts = {
                     types: [
@@ -863,14 +865,47 @@ window.onload = () => {
                 const file = await scriptFileHandle.getFile();
                 const text = await file.text();
                 fileHandler(scriptFileHandle.name, text);
-            }, //loadTextFile
-        }; //const fileIO
+            }; //loadTextFile
+            const storeFileFallback = (content, isConsole) => {
+                const link = document.createElement('a');
+                link.href = `data:text/plain;charset=utf-8,${content}`; //sic!
+                link.download = isConsole
+                    ? definitionSet.textFeatures.defaultOutputFileName
+                    : definitionSet.textFeatures.defaultScriptFileName;
+                link.click();
+            }; //storeFileFallback
+            const loadTextFileFallback = async (fileHandler, _, accept) => { // fileHandler(fileName, text)
+                const input = document.createElement("input");
+                input.type = "file";
+                let acceptFileTypes = null;
+                for (let index in accept) {
+                    acceptFileTypes = accept[index][0];
+                    break;
+                } //loop
+                input.accept = acceptFileTypes;
+                input.value = null;
+                if (fileHandler)
+                    input.onchange = event => {
+                        const file = event.target.files[0];
+                        if (!file) return;
+                        const reader = new FileReader();
+                        reader.readAsText(file);
+                        reader.onload = readEvent =>
+                            fileHandler(file.name, readEvent.target.result);
+                    }; //input.onchange
+                input.click();                
+            }; //loadTextFileFallback
+            if (window.showOpenFilePicker && window.showSaveFilePicker)
+                return { storeFile: storeFile, loadTextFile: loadTextFile };
+            else
+                return { storeFile: storeFileFallback, loadTextFile: loadTextFileFallback };
+        })(); //const fileIO
 
-        storeButton.onclick = async () => {
-            await fileIO.storeFile(editor.value, false);
+        storeButton.onclick = () => {
+            fileIO.storeFile(editor.value, false);
         }; //storeButton.onclick
-        downloadButton.onclick = async () => {
-            await fileIO.storeFile(consoleInstance.toString(), true);
+        downloadButton.onclick = () => {
+            fileIO.storeFile(consoleInstance.toString(), true);
         }; //downloadButton.onclick
 
         JavaScriptPlaygroundAPI.onLoad((title, code, doNotEvaluate, strict) => {
@@ -883,8 +918,8 @@ window.onload = () => {
                 document.title = `${document.title}: ${title}`;
         });
         let isCodeModified = false;
-        loadButton.onclick = async () => {
-            await fileIO.loadTextFile((_, result) => {
+        loadButton.onclick = () => {
+            fileIO.loadTextFile((_, result) => {
                 editor.value = result;
                 isCodeModified = false;
             }, 
