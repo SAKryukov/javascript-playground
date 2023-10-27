@@ -155,7 +155,7 @@ window.onload = () => {
         downloadButton, closeButton, evaluateButton, loadButton, storeButton, installButton,
         evaluateResult, positionIndicator,
         product, copyright) => {
-        
+
         window.onbeforeinstallprompt = event => {
             installButton.style.display = "block";
             installButton.onclick = () => event.prompt();
@@ -163,6 +163,20 @@ window.onload = () => {
         window.onappinstalled = () => {
             installButton.style.display = "none";
         } //window.onappinstalled
+        if (window.launchQueue) {
+            window.launchQueue.setConsumer(launchParams => {
+                if (launchParams.files && launchParams.files.length) {
+                    const fileHandle = launchParams.files[0];
+                    fileHandle.getFile().then(file => {
+                        file.text().then(text => {
+                            editor.value = text;
+                            strictModeSwitch.checked = true;
+                            evaluate();
+                        })
+                    });
+                } //if
+            });
+        } //if
 
         product.innerHTML = `${metadata.title} ${metadata.version()}`;
         copyright.innerHTML = `Copyright &copy; ${metadata.copyright}`;

@@ -1,21 +1,27 @@
 {
-  "name": "JavaScript Playground",
-  "short_name": "JavaScriptPlayground",
-  "description": "JavaScript Playground, calculator and demo tool",
-  "start_url": "./",
-  "display": "standalone",
-  "theme_color": "bisque",
-  "background_color": "aliceblue",
-  "icons": [
-    {
-      "src": "./images/JavaScript-Playground.png",
-      "sizes": "16x16",
-      "type": "image/png"
-    },
-    {
-      "src": "./images/JavaScript-Playground.svg",
-      "sizes": "any",
-      "type": "image/svg+xml"
-    }
-  ]
+    "name": "JavaScript Playground",
+    "short_name": "JavaScriptPlayground",
+    "description": "JavaScript Playground, calculator and demo tool",
+    "start_url": "./",
+    "display": "standalone",
+    "theme_color": "bisque",
+    "background_color": "aliceblue",
+    "icons": [
+        {
+            "src": "./images/JavaScript-Playground.png",
+            "sizes": "16x16",
+            "type": "image/png"
+        },
+        {
+            "src": "./images/JavaScript-Playground.svg",
+            "sizes": "any",
+            "type": "image/svg+xml"
+        }
+    ],
+    "file_handlers": [
+        {
+            "action": "./",
+            "accept": { "application/ecmascript": [".js"] }
+        }
+    ]
 }
