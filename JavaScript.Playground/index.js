@@ -895,11 +895,10 @@ window.onload = () => {
                     }; //input.onchange
                 input.click();                
             }; //loadTextFileFallback
-            if (window.showOpenFilePicker && window.showSaveFilePicker)
-                return { storeFile: storeFile, loadTextFile: loadTextFile };
-            else
-                return { storeFile: storeFileFallback, loadTextFile: loadTextFileFallback };
-        })(); //const fileIO
+                return (window.showOpenFilePicker && window.showSaveFilePicker)
+                    ? { storeFile: storeFile, loadTextFile: loadTextFile }
+                    : { storeFile: storeFileFallback, loadTextFile: loadTextFileFallback };
+        })(); //fileIO
 
         storeButton.onclick = () => {
             fileIO.storeFile(editor.value, false);
