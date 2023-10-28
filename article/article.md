@@ -345,6 +345,26 @@ This status is cleared when the code is loaded from the file or supplied via the
 
 Not all lines of this code are absolutely required: deletion of `event.returnValue` could be replaced with the assignment to `undefined`, and `event.preventDefault()` might be redundant. However, there can be chances that in certain situations for certain browsers these lines will be essential. See [this documentation page](https://developer.mozilla.org/en-US/docs/Web/API/WindowEventHandlers/onbeforeunload) for more detail.
 
+## PWA
+
+???
+
+### Manifest
+
+???
+
+### Off-line Operation
+
+???
+
+### Installation Prompt
+
+???
+
+### Detection of Installation
+
+???
+
 ## Playground API
 
 The idea behind `playgroundAPI` is to pass some script to the main JavaScript Playground application "index.html", populate the value of the `editor` control with the script text, and optionally execute it in the main application, optionally in strict mode. In this kind of usage, let's consider the main JavaScript Playground application as a "host", used by the "client" part written by the user.
@@ -453,3 +473,5 @@ Well, at least I warned and suggest what can be used in my error message. In the
 **4.2.0**: Introduced [host context protection](#heading-host-context-protection), eliminated reloading of the host application on the modification of the "Strict Mode" control value.
 
 **4.3.0**: Many fixes and improvements.
+
+**5.1.0**: //SA??? Implemented [PWA](https://developer.mozilla.org/en-US/docs/Web/Progressive_web_apps). Application can be installed on a local system from a Web site based on one of supporting browaser and then used 100% off-line.

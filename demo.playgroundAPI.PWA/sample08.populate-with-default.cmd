@@ -1,0 +1,1 @@
+@PWA.lnk %~dp0/sample08.populate-with-default.js

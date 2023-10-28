@@ -1,0 +1,1 @@
+@PWA.lnk %~dp0/sample03.what-is-constructed.js

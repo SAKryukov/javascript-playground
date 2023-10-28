@@ -1,0 +1,1 @@
+@PWA.lnk %~dp0/sample10.generator-function.js
