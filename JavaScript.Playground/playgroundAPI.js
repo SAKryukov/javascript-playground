@@ -15,7 +15,7 @@ https://www.codeproject.com/Articles/5291705/JavaScript-Playground
 const metadata = (() => {
     return {
         copyright: "2015, 2019-2023 by S A Kryukov",
-        fullVersion: "5.0.29",
+        fullVersion: "5.0.30",
         title: document.title,
         version: function(memberCount) {
            if (!memberCount) return this.fullVersion;

@@ -21,7 +21,7 @@ https://www.codeproject.com/Articles/5291705/JavaScript-Playground
   <link rel="manifest" href="./manifest.json">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <link rel="icon" type="image/svg+xml" href="./images/JavaScript-Playground.svg">
-  <link rel="icon" type="image/svg+xml" href="./images/JavaScript-Playground.svg">
+  <link rel="mask-icon" href="./images/JavaScript-Playground.svg" color="transparent">
   <style>
     :root {
       --input-border: solid thin brown;
@@ -80,12 +80,15 @@ https://www.codeproject.com/Articles/5291705/JavaScript-Playground
     aside { border: var(--input-border); outline: none; }
     textarea, input { border: var(--input-border); outline: none; background-color: aliceblue; }
     textarea:focus, input:focus { background-color: white; background-color: white; }
-    button { outline: dashed 2px transparent; background-color: lightblue; border-radius: 7px; border: var(--input-border); }
+    button { padding-top: 2px; padding-bottom: 2px; outline: dashed 2px transparent; background-color: lightblue; border-radius: 7px; border: var(--input-border); }
+    button > * { vertical-align: middle; }
     button:focus { outline: dotted 2px brown; outline-offset: -5px; background-color: lightskyblue; border-radius: 2px; }
     label > input { vertical-align: middle; }
     button, input, textarea { font-size: 100%; }
     details > details, details > p { margin-left: 1.6em; }
     footer > section > input:last-child { padding: 0; }
+    img { width: 1em; display: inline; }
+    label, button { white-space: nowrap; }
   </style>
 </head>
 <body>
@@ -120,7 +123,7 @@ https://www.codeproject.com/Articles/5291705/JavaScript-Playground
   <footer>
     <section>
       <a title="Help" href="help.html"><u>H</u>elp</a>
-      <button title="Evaluate expression; use &ldquo;write()&rdquo;, &ldquo;writeLine()&rdquo; or &ldquo;console.log()&rdquo; to write to console">Evaluate: F2, Ctrl+Enter&thinsp;&#x2794;</button>
+      <button title="Evaluate expression; use &ldquo;write()&rdquo;, &ldquo;writeLine()&rdquo; or &ldquo;console.log()&rdquo; to write to console">Evaluate: F2, Ctrl+Enter&thinsp;<img src="images/JavaScript-Playground.svg"/></button>
       <input title="Script result" type="text" id="resultCell" spellcheck="false" readonly="readonly"/>
       <button title="Load script from a file">Load&hellip;</button>
       <button title="Store script in a file">Store&hellip;</button>
