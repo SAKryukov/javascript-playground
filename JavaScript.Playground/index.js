@@ -859,7 +859,7 @@ window.onload = () => {
                 workingFileHandle = isConsole ? consoleFileHandle : scriptFileHandle;
                 const writableStream = await workingFileHandle.createWritable();
                 await writableStream.write(content);
-                await writableStream.close();
+                writableStream.close().then(() => isCodeModified = false);
             }; //storeFile
             const loadTextFile = async (fileHandler, description, accept) => { // fileHandler(fileName, text)
                 if (!fileHandler) return;
@@ -887,8 +887,9 @@ window.onload = () => {
                     ? definitionSet.textFeatures.defaultOutputFileName
                     : definitionSet.textFeatures.defaultScriptFileName;
                 link.click();
+                isCodeModified = false; 
             }; //storeFileFallback
-            const loadTextFileFallback = async (fileHandler, _, accept) => { // fileHandler(fileName, text)
+            const loadTextFileFallback = (fileHandler, _, accept) => { // fileHandler(fileName, text)
                 const input = document.createElement("input");
                 input.type = "file";
                 let acceptFileTypes = null;
@@ -909,9 +910,9 @@ window.onload = () => {
                     }; //input.onchange
                 input.click();                
             }; //loadTextFileFallback
-                return window.showOpenFilePicker && window.showSaveFilePicker
-                    ? { storeFile: storeFile, loadTextFile: loadTextFile }
-                    : { storeFile: storeFileFallback, loadTextFile: loadTextFileFallback };
+            return window.showOpenFilePicker && window.showSaveFilePicker
+                ? { storeFile: storeFile, loadTextFile: loadTextFile }
+                : { storeFile: storeFileFallback, loadTextFile: loadTextFileFallback };
         })(); //fileIO
 
         storeButton.onclick = () => {
