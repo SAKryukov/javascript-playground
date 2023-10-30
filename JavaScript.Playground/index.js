@@ -21,7 +21,7 @@ const setReadonly = target => {
 
 window.onload = () => {
 
-    if (navigator.serviceWorker)
+    if (navigator.serviceWorker && (new URL(window.location).protocol == "https:"))
         navigator.serviceWorker
             .register("pwa-service-worker.js");
     
