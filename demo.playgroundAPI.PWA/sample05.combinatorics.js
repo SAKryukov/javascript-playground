@@ -12,7 +12,7 @@ function reverseWord(word) {
     return result;
 } //reverseWord
 
-function ramdomizeWord(word) {
+function randomizeWord(word) {
     let result = "";
     const sample = word.split(result);
     const count = word.length;
@@ -29,7 +29,7 @@ function ramdomizeWord(word) {
 writeLine(word);
 writeLine(reverseWord(word));
 writeLine(String.fromCharCode(0x2500).repeat(word.length));
-for (let c = 0; c < permutationCount; ++c) writeLine(ramdomizeWord(word));
+for (let c = 0; c < permutationCount; ++c) writeLine(randomizeWord(word));
 
 String.prototype.shuffle = function () {
     const a = this.split("");
