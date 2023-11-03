@@ -4,7 +4,9 @@
 
 [Help](https://SAKryukov.github.io/javascript-playground/JavaScript.Playground/help.html)
 
-Besides, `playgroundAPI` can be used to demonstrate pre-created code and JavaScript techniques, see `javascript-playground/demo.playgroundAPI` and [live demo](https://SAKryukov.github.io/javascript-playground/demo.playgroundAPI/).
+Besides, `PlaygroundAPI` can be used to demonstrate pre-created code and JavaScript techniques, see `javascript-playground/demo.playgroundAPI` and [live demo](https://SAKryukov.github.io/javascript-playground/demo.playgroundAPI/).
+
+JavaScript Playground can be used as a [PWA](https://en.wikipedia.org/wiki/Progressive_web_app). To install it, load the [JavaScript Playground page] and hit the button Install. This installation is 100% off-line. `PlaygroundAPI` can also be used with an installed PWA. Please see `javascript-playground/demo.playgroundAPI.PWA` and `javascript-playground/demo.playgroundAPI.PWA/readme.txt`.
 
 Original publication:<br/>
 [https://www.codeproject.com/Articles/5291705/JavaScript-Playground](https://www.codeproject.com/Articles/5291705/JavaScript-Playground)
