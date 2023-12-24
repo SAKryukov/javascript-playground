@@ -19,6 +19,28 @@ const setReadonly = target => {
     return new Proxy(target, readonlyHandler);
 }; //setReadonly
 
+    //API:
+    const hex = (arg, upcase) => {
+        const hexdigit = "0123456789abcdef";
+        let result = String.empty;
+        if (upcase) hexdigit = hexdigit.toUpperCase();
+        for (let index = 0; index < (32 / 4); ++index) {
+            const indexInString = (arg >>> (index * 4)) & 0xF;
+            result = hexdigit.charAt(indexInString) + result;
+        } //loop
+        return result;
+    } //hex
+    const bin = arg => {
+        let result = String.empty;
+        for (let index = 0; index < 32; ++index) {
+            if ((arg & (1 << index)) != 0) result = "1" + result;
+            else result = "0" + result;
+        } //loop
+        return result;
+    } //bin
+    const f2c = f => 5 / 9 * (f - 32);
+    const c2f = c => 9 / 5 * c + 32;
+
 window.onload = () => {
 
     if (navigator.serviceWorker && (new URL(window.location).protocol == "https:"))
@@ -952,28 +974,6 @@ window.onload = () => {
                 delete (event.returnValue);
         }); // protect from losing unsaved data
     }; //setup
-
-    //API:
-    const hex = (arg, upcase) => {
-        const hexdigit = "0123456789abcdef";
-        let result = String.empty;
-        if (upcase) hexdigit = hexdigit.toUpperCase();
-        for (let index = 0; index < (32 / 4); ++index) {
-            const indexInString = (arg >>> (index * 4)) & 0xF;
-            result = hexdigit.charAt(indexInString) + result;
-        } //loop
-        return result;
-    } //hex
-    const bin = arg => {
-        let result = String.empty;
-        for (let index = 0; index < 32; ++index) {
-            if ((arg & (1 << index)) != 0) result = "1" + result;
-            else result = "0" + result;
-        } //loop
-        return result;
-    } //bin
-    const f2c = f => 5 / 9 * (f - 32);
-    const c2f = c => 9 / 5 * c + 32;
 
     const evaluateWith = (text, api, isStrict) => {
         return new Function("api", safeInput(text, isStrict))(api);
